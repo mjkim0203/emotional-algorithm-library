@@ -1,6 +1,0 @@
-flask
-opencv-python
-tensorflow==2.10.1
-keras
-numpy
-gdown
