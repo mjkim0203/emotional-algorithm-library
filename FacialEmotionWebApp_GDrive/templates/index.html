@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Emotion Detection</title>
+</head>
+<body>
+  <h1>Facial Emotion Detection</h1>
+  <video id="video" width="640" height="480" autoplay></video>
+  <canvas id="canvas" hidden></canvas>
+  <p>Detected Emotion: <span id="result">None</span></p>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
