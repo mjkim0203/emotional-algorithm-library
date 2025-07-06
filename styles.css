@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: 'Pretendard', sans-serif;
+  background-color: #000000;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+}
+.prompt-wrapper {
+  width: 100%;
+  max-width: 640px;
+  background-color: black;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.prompt-text {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffff;
+}
+#emotion-banner {
+  width: 100%;
+  max-width: 640px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
+  font-family: 'Pretendard', sans-serif;
+  margin-bottom: 12px;
+  transition: background-color 0.3s ease;
+}
+canvas {
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 4 / 3;
+  background-color: black;
+}
+#canvasContainer {
+  width: 100%;
+  max-width: 640px;
+  position: relative;
+}
+.emotion-button {
+  margin-top: 16px;
+  background: none;
+  border: none;
+  padding: 0;
+  pointer-events: none;
+}
+.emotion-button.active {
+  pointer-events: auto;
+}
+#capture-image {
+  width: 100px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+#emotion-graphic {
+  width: 90px;
+  height: auto;
+  margin-bottom: 12px;
+  transition: opacity 0.3s ease;
+}
+#status-div {
+  display: none;
+}
+#capture-text {
+  color: white;
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-family: 'Pretendard', sans-serif;
+}
+#capture-guide {
+  color: #888888;
+  font-size: 16px;
+  margin-top: 0px;
+  text-align: center;
+  font-family: 'Pretendard', sans-serif;
+}
