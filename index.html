@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Face Emotion Detector</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="container">
+    <img id="emotion-graphic" style="max-width: 180px; margin-bottom: 12px;" />
+    <div class="prompt-wrapper">
+      <div class="prompt-text">문장 불러오는 중...</div>
+    </div>
+    <div id="emotion-banner">HOW ALGORITM U FEELING TODAY?</div>
+    <div id="canvasContainer"></div>
+    <a id="emotion-link" href="#" target="_blank" class="emotion-button">
+      <img id="capture-image" src="assets/CAPTURE.png" alt="감정별 캡처 버튼" style="max-width: 180px; margin-top: 12px;" />
+    </a>
+    <p id="capture-text">Click to Capture!</p>
+    <p id="capture-guide">아이콘을 눌러 캡쳐해주세요</p>
+    <div id="status-div"></div>
+  </div>
+  <script defer src="script.js"></script>
+</body>
+</html>
