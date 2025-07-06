@@ -1,1 +1,1 @@
-emootional-algorithm-library
+emotional-algorithm-library
