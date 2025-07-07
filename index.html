@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Emotion Detector</title>
+  <script defer src="https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/dist/face-api.min.js"></script>
+  <script defer src="https://demo.liveswitch.io/lib/fm.liveswitch.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+      background-color: #000;
+      color: #fff;
+      width: 100%;
+      height: 100%;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2vw;
+      max-width: 100%;
+    }
+
+    .prompt-wrapper {
+      width: 100%;
+      max-width: 640px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      background-color: black;
+      text-align: center;
+    }
+
+    .prompt-text {
+      font-size: clamp(14px, 2.5vw, 20px);
+      font-weight: 500;
+      color: white;
+    }
+
+    #emotion-banner {
+      width: 100%;
+      max-width: 640px;
+      height: auto;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #333;
+      color: white;
+      font-size: clamp(16px, 2.5vw, 24px);
+      font-weight: 400;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    #emotion-graphic {
+      width: 24vw;
+      max-width: 120px;
+      height: auto;
+      margin-bottom: 12px;
+    }
+
+    #canvasContainer {
+      width: 100%;
+      max-width: 90vw;
+      aspect-ratio: 4 / 3;
+      background-color: black;
+      position: relative;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      display: block;
+    }
+
+    .emotion-button {
+      margin-top: 16px;
+      background: none;
+      border: none;
+      pointer-events: none;
+    }
+
+    .emotion-button.active {
+      pointer-events: auto;
+    }
+
+    #capture-image {
+      width: clamp(60px, 20vw, 140px);
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    #capture-text {
+      font-size: clamp(14px, 2.5vw, 20px);
+      margin: 16px 0 8px;
+      text-align: center;
+    }
+
+    #capture-guide {
+      font-size: clamp(12px, 2vw, 16px);
+      color: #888;
+      margin: 0;
+      text-align: center;
+    }
+
+    @media (orientation: portrait) {
+      #canvasContainer {
+        max-width: 95vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img id="emotion-graphic" src="" alt="emotion graphic" />
+    <div class="prompt-wrapper">
+      <div class="prompt-text">문장 불러오는 중...</div>
+    </div>
+    <div id="emotion-banner">HOW ALGORITM U FEELING TODAY?</div>
+    <div id="canvasContainer"></div>
+    <a id="emotion-link" href="#" target="_blank" class="emotion-button">
+      <img id="capture-image" src="" alt="감정별 캡처 버튼" />
+    </a>
+    <p id="capture-text">Click to Capture!</p>
+    <p id="capture-guide">아이콘을 눌러 캡쳐해주세요</p>
+    <div id="status-div"></div>
+  </div>
+  <script defer src="script.js"></script>
+</body>
+</html>
