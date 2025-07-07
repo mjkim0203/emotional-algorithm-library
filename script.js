@@ -177,7 +177,7 @@ async function init() {
         if (emotionImages[emotionName]) graphicEl.src = emotionImages[emotionName];
 
         const captureImageEl = document.getElementById("capture-image");
-        captureImageEl.src = "https://cdn.glitch.global/.../CAPTURE.png";
+        captureImageEl.src = "https://cdn.glitch.global/f52c6b01-3ecd-4d0c-9574-b68cf7003384/CAPTURE%20.png?v=1751635645071/CAPTURE.png";
 
         if (emotionLinks[topEmotion]) {
           linkEl.href = emotionLinks[topEmotion];
