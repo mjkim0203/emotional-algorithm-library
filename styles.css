@@ -12,6 +12,7 @@ body {
   align-items: center;
   padding: 16px;
 }
+
 .prompt-wrapper {
   width: 100%;
   max-width: 640px;
@@ -28,7 +29,7 @@ body {
 #emotion-banner {
   width: 100%;
   max-width: 640px;
-  height: 48px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,8 +37,10 @@ body {
   font-size: 20px;
   font-weight: 400;
   font-family: 'Pretendard', sans-serif;
-  margin-bottom: 12px;
+  margin-bottom: 0px;
   transition: background-color 0.3s ease;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 canvas {
   width: 100%;
