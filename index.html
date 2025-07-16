@@ -3,27 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Face Detection Fun Test</title>
+  <title>Face Detection Vertical</title>
 
-  <!-- External Scripts -->
+  <!-- External Libraries -->
   <script defer src="https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/dist/face-api.min.js"></script>
-  <script defer src="https://demo.liveswitch.io/lib/fm.liveswitch.js"></script>
   <script defer src="script.js"></script>
 
-  <!-- Fonts & Styles -->
+  <!-- Fonts & CSS -->
   <link rel="stylesheet" href="styles.css" />
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" />
 </head>
 <body>
   <div class="container">
-    <img id="emotion-graphic" style="max-width: 180px; margin-bottom: 12px;" />
+    <img id="emotion-graphic" />
     <div class="prompt-wrapper">
       <div class="prompt-text">문장 불러오는 중...</div>
     </div>
     <div id="emotion-banner">HOW ALGORITM U FEELING TODAY?</div>
     <div id="canvasContainer"></div>
     <a id="emotion-link" href="#" target="_blank" class="emotion-button">
-      <img id="capture-image" src="" alt="감정별 캡처 버튼" />
+      <img id="capture-image" alt="감정별 캡처 버튼" />
     </a>
     <p id="capture-text">아이콘을 눌러 캡쳐해주세요!</p>
     <p id="capture-guide">(화면은 녹화되지 않습니다)</p>
