@@ -1,69 +1,81 @@
-* {
-  box-sizing: border-box;
+:root {
+  font-size: 1.2vw;
 }
 
-body {
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: 'Pretendard', sans-serif;
+  padding: 0;
+}
+
+body, html {
+  width: 100vw;
+  height: 100vh;
   background-color: #000;
+  font-family: 'Pretendard', sans-serif;
+  overflow: hidden;
 }
 
 .container {
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
+  padding: 2vh 2vw;
+  gap: 2vh;
+}
+
+#emotion-graphic {
+  width: 10vh;
+  height: auto;
+  transition: opacity 0.3s ease;
 }
 
 .prompt-wrapper {
-  width: 100%;
-  max-width: 640px;
+  width: 90vw;
+  max-width: 100%;
   background-color: black;
-  padding: 12px 16px;
-  margin-bottom: 16px;
+  padding: 2vh 2vw;
   text-align: center;
 }
 
 .prompt-text {
-  font-size: 18px;
+  font-size: 2.4rem;
   font-weight: 500;
-  color: #fff;
+  color: white;
 }
 
 #emotion-banner {
-  width: 100%;
-  max-width: 640px;
-  height: 52px;
+  width: 90vw;
+  height: 6vh;
+  font-size: 2.6rem;
+  color: white;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 20px;
-  font-weight: 400;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  margin-bottom: 0;
+  background-color: #222;
+  border-radius: 2rem;
   transition: background-color 0.3s ease;
+}
+
+#canvasContainer {
+  position: relative;
+  width: 90vw;
+  max-width: 100%;
+  aspect-ratio: 3 / 4;
 }
 
 canvas {
   width: 100%;
-  max-width: 640px;
-  aspect-ratio: 4 / 3;
+  height: auto;
   background-color: black;
-}
-
-#canvasContainer {
-  width: 100%;
-  max-width: 640px;
-  position: relative;
+  border-radius: 1rem;
 }
 
 .emotion-button {
-  margin-top: 16px;
-  background: none;
-  border: none;
-  padding: 0;
+  margin-top: 2vh;
   pointer-events: none;
 }
 
@@ -72,30 +84,19 @@ canvas {
 }
 
 #capture-image {
-  width: 100px;
+  width: 12vh;
   height: auto;
   display: block;
   margin: 0 auto;
 }
 
-#emotion-graphic {
-  width: 90px;
-  height: auto;
-  margin-bottom: 12px;
-  transition: opacity 0.3s ease;
-}
-
-#capture-text {
+#capture-text, #capture-guide {
   color: white;
-  font-size: 20px;
-  margin-top: 20px;
-  margin-bottom: 8px;
   text-align: center;
+  font-size: 2rem;
 }
 
 #capture-guide {
   color: #888;
-  font-size: 16px;
-  text-align: center;
-  margin-top: 0;
+  font-size: 1.6rem;
 }
