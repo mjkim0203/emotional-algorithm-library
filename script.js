@@ -1,111 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-body {
-  margin: 0;
-  font-family: 'Pretendard', sans-serif;
-  background-color: #000000;
-}
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px;
-}
-.prompt-wrapper {
-  width: 100%;
-  max-width: 640px;
-  background-color: black;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  text-align: center;
-}
-.prompt-text {
-  font-size: 18px;
-  font-weight: 500;
-  color: #ffffff;
-}
-#emotion-banner {
-  width: 100%;
-  max-width: 640px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 20px;
-  font-weight: 400;
-  font-family: 'Pretendard', sans-serif;
-  margin-bottom: 0px;
-  transition: background-color 0.3s ease;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-}
-canvas {
-  width: 100%;
-  max-width: 640px;
-  aspect-ratio: 4 / 3;
-  background-color: black;
-}
-#canvasContainer {
-  width: 100%;
-  max-width: 640px;
-  position: relative;
-}
-.emotion-button {
-  margin-top: 16px;
-  background: none;
-  border: none;
-  padding: 0;
-  pointer-events: none;
-}
-.emotion-button.active {
-  pointer-events: auto;
-}
-#capture-image {
-  width: 100px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-#emotion-graphic {
-  width: 90px;
-  height: auto;
-  margin-bottom: 12px;
-  transition: opacity 0.3s ease;
-}
-#capture-text {
-  color: white;
-  font-size: 20px;
-  margin-top: 20px;
-  margin-bottom: 8px;
-  text-align: center;
-  font-family: 'Pretendard', sans-serif;
-}
-#capture-guide {
-  color: #888888;
-  font-size: 16px;
-  margin-top: 0px;
-  text-align: center;
-  font-family: 'Pretendard', sans-serif;
-}
-
-<!-- script.js -->
-const prompts = [
-  "지금 어떤 감정이 드시나요?",
-  "당신을 가장 쉽게 웃게 만드는 건 무엇인가요?",
-  "기억에 남는 슬펐던 경험은 어떤 게 있나요?",
-  "최근 어떤 일에 화가 났나요?",
-  "가장 최근에 무서웠던 순간은 언제였나요?",
-  "불쾌하거나 역겨운 느낌이 들었던 상황은 있었나요?",
-  "예상치 못한 일이 생겼을 때 어떤 감정이 드시나요?"
-];
-
-window.addEventListener("DOMContentLoaded", () => {
-  const promptEl = document.querySelector(".prompt-text");
-  promptEl.innerText = prompts[Math.floor(Math.random() * prompts.length)];
-});
-
 const emotionColors = {
   neutral: "#AAAEAA",
   happy: "#FFE048",
@@ -126,21 +18,41 @@ const emotionLinks = {
   neutral: "https://example.com/neutral"
 };
 
+const prompts = [
+  "지금 어떤 감정이 드시나요?",
+  "당신을 가장 쉽게 웃게 만드는 건 무엇인가요?",
+  "기억에 남는 슬펐던 경험은 어떤 게 있나요?",
+  "최근 어떤 일에 화가 났나요?",
+  "가장 최근에 무서웠던 순간은 언제였나요?",
+  "불쾌하거나 역겨운 느낌이 들었던 상황은 있었나요?",
+  "예상치 못한 일이 생겼을 때 어떤 감정이 드시나요?"
+];
+
+window.addEventListener("DOMContentLoaded", () => {
+  const promptEl = document.querySelector(".prompt-text");
+  const randomIndex = Math.floor(Math.random() * prompts.length);
+  promptEl.innerText = prompts[randomIndex];
+});
+
 function hexToRgb(hex) {
   const bigint = parseInt(hex.replace("#", ""), 16);
   return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
 }
 
 function rgbToHex(r, g, b) {
-  const toHex = (c) => ("0" + Math.round(c).toString(16)).slice(-2);
+  const toHex = (c) => {
+    const hex = Math.round(c).toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  };
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
 function blendEmotionColor(expressions) {
   let total = 0, r = 0, g = 0, b = 0;
-  for (const [emo, weight] of Object.entries(expressions)) {
-    if (emotionColors[emo]) {
-      const rgb = hexToRgb(emotionColors[emo]);
+  for (const emotion in expressions) {
+    if (emotionColors[emotion]) {
+      const weight = expressions[emotion];
+      const rgb = hexToRgb(emotionColors[emotion]);
       r += rgb.r * weight;
       g += rgb.g * weight;
       b += rgb.b * weight;
@@ -150,43 +62,79 @@ function blendEmotionColor(expressions) {
   return total === 0 ? "#000000" : rgbToHex(r / total, g / total, b / total);
 }
 
-const video = document.createElement("video");
-let stop = false;
+function lerpColor(from, to, alpha = 0.2) {
+  const a = hexToRgb(from);
+  const b = hexToRgb(to);
+  return rgbToHex(
+    a.r + (b.r - a.r) * alpha,
+    a.g + (b.g - a.g) * alpha,
+    a.b + (b.b - a.b) * alpha
+  );
+}
+
+async function getPreferredCameraStream() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+
+  let preferredDevice = videoDevices.find((device) =>
+    device.label.toLowerCase().includes("elgato facecam")
+  );
+
+  const constraints = {
+    video: preferredDevice
+      ? { deviceId: { exact: preferredDevice.deviceId }, width: 640, height: 480 }
+      : { width: 640, height: 480 },
+    audio: false,
+  };
+
+  return await navigator.mediaDevices.getUserMedia(constraints);
+}
+
+let video = document.createElement("video");
+let stream = null, stop = false;
 
 async function init() {
   await faceapi.nets.tinyFaceDetector.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models");
   await faceapi.nets.faceLandmark68TinyNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models");
   await faceapi.nets.faceExpressionNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models");
 
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  const videoDevices = devices.filter(d => d.kind === "videoinput");
-  const elgato = videoDevices.find(d => d.label.toLowerCase().includes("elgato"));
-  if (!elgato) return alert("Elgato Facecam을 찾을 수 없습니다.");
+  try {
+    stream = await getPreferredCameraStream();
+  } catch (e) {
+    alert("카메라에 접근할 수 없습니다: " + e.message);
+    return;
+  }
 
-  const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: elgato.deviceId } }, audio: false });
   video.srcObject = stream;
+  video.muted = true;
   video.autoplay = true;
   video.playsInline = true;
-  video.muted = true;
 
   video.onloadedmetadata = () => {
     video.play();
+
     const canvas = faceapi.createCanvasFromMedia(video);
     const container = document.getElementById("canvasContainer");
     const bannerEl = document.getElementById("emotion-banner");
     const linkEl = document.getElementById("emotion-link");
+
     container.innerHTML = "";
     container.appendChild(canvas);
+
     canvas.width = 640;
     canvas.height = 480;
-
     const displaySize = { width: 640, height: 480 };
     faceapi.matchDimensions(canvas, displaySize);
 
     setInterval(async () => {
       if (stop) return;
       stop = true;
-      const result = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
+
+      const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.3 });
+      const result = await faceapi.detectSingleFace(video, options)
+        .withFaceLandmarks(true)
+        .withFaceExpressions();
+
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -200,10 +148,57 @@ async function init() {
         const resized = faceapi.resizeResults(result, displaySize);
         const box = resized.detection.box;
         const expressions = result.expressions;
-        const color = blendEmotionColor(expressions);
-        bannerEl.style.backgroundColor = color;
+        const targetColor = blendEmotionColor(expressions);
+        window._boxColor = window._boxColor ? lerpColor(window._boxColor, targetColor, 0.4) : targetColor;
 
-        const topEmotion = Object.entries(expressions).sort((a, b) => b[1] - a[1])[0][0];
+        if (bannerEl) bannerEl.style.backgroundColor = window._boxColor;
+
+        const emotionLabels = {
+          neutral: "Neutral", happy: "Joy", sad: "Sadness", angry: "Anger",
+          fearful: "Fear", disgusted: "Disgust", surprised: "Surprise"
+        };
+
+        const emotionImages = {
+          Neutral: "https://cdn.glitch.global/.../IMOJI-100.png",
+          Joy: "https://cdn.glitch.global/.../IMOJI-200.png",
+          Sadness: "https://cdn.glitch.global/.../IMOJI-300.png",
+          Anger: "https://cdn.glitch.global/.../IMOJI-400.png",
+          Fear: "https://cdn.glitch.global/.../IMOJI-500.png",
+          Disgust: "https://cdn.glitch.global/.../IMOJI-600.png",
+          Surprise: "https://cdn.glitch.global/.../IMOJI-700.png"
+        };
+
+        const sorted = Object.entries(expressions).sort((a, b) => b[1] - a[1]);
+        const topEmotion = sorted[0][0];
+        const emotionName = emotionLabels[topEmotion];
+        const label = `${emotionName || topEmotion} (${(sorted[0][1] * 100).toFixed(1)}%)`;
+
+        const mirroredBoxX = canvas.width - box.x - box.width;
+        ctx.strokeStyle = window._boxColor;
+        ctx.lineWidth = 4.5;
+        ctx.strokeRect(mirroredBoxX, box.y, box.width, box.height);
+
+        ctx.font = "18px 'Pretendard', sans-serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        const padding = 6;
+        const textX = mirroredBoxX + 2;
+        const textY = box.y - 30;
+        const textWidth = ctx.measureText(label).width;
+        const textHeight = 24;
+
+        ctx.fillStyle = window._boxColor;
+        ctx.fillRect(textX - padding, textY - padding, textWidth + padding * 2, textHeight + padding * 1.2);
+
+        ctx.fillStyle = "#000000";
+        ctx.fillText(label, textX, textY);
+
+        const graphicEl = document.getElementById("emotion-graphic");
+        if (emotionImages[emotionName]) graphicEl.src = emotionImages[emotionName];
+
+        const captureImageEl = document.getElementById("capture-image");
+        captureImageEl.src = "https://cdn.glitch.global/.../CAPTURE.png";
+
         if (emotionLinks[topEmotion]) {
           linkEl.href = emotionLinks[topEmotion];
           linkEl.classList.add("active");
@@ -211,14 +206,9 @@ async function init() {
           linkEl.href = "#";
           linkEl.classList.remove("active");
         }
-
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 4;
-        const mirroredX = canvas.width - box.x - box.width;
-        ctx.strokeRect(mirroredX, box.y, box.width, box.height);
       }
       stop = false;
-    }, 200);
+    }, 100);
   };
 }
 
