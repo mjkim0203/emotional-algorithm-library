@@ -159,7 +159,7 @@ async function init() {
         };
 
         const emotionImages = {
-          Neutral: "https://cdn.glitch.global/.../IMOJI-100.png",
+          Neutral: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-100.png?v=1751373938451/IMOJI-100.png",
           Joy: "https://cdn.glitch.global/.../IMOJI-200.png",
           Sadness: "https://cdn.glitch.global/.../IMOJI-300.png",
           Anger: "https://cdn.glitch.global/.../IMOJI-400.png",
@@ -197,7 +197,7 @@ async function init() {
         if (emotionImages[emotionName]) graphicEl.src = emotionImages[emotionName];
 
         const captureImageEl = document.getElementById("capture-image");
-        captureImageEl.src = "https://cdn.glitch.global/.../CAPTURE.png";
+        captureImageEl.src = "https://cdn.glitch.global/f52c6b01-3ecd-4d0c-9574-b68cf7003384/CAPTURE%20.png?v=1751635645071/CAPTURE.png";
 
         if (emotionLinks[topEmotion]) {
           linkEl.href = emotionLinks[topEmotion];
