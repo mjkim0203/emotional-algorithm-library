@@ -1,26 +1,25 @@
-let video = document.createElement("video");
-let stream = null;
-let stop = false;
-
 async function init() {
   await faceapi.nets.tinyFaceDetector.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models");
+  await faceapi.nets.faceLandmark68TinyNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models");
+  await faceapi.nets.faceExpressionNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models");
 
+  // 외부 웹캠 우선 선택
   const devices = await navigator.mediaDevices.enumerateDevices();
-  const videoDevices = devices.filter(device => device.kind === "videoinput");
+  const cams = devices.filter(device => device.kind === "videoinput");
+  const externalCam = cams.find(d => d.label.toLowerCase().includes("usb")) || cams[cams.length - 1];
 
-  const externalCam = videoDevices.find(d => d.label.toLowerCase().includes("usb")) || videoDevices[videoDevices.length - 1];
-
-  stream = await navigator.mediaDevices.getUserMedia({
+  const stream = await navigator.mediaDevices.getUserMedia({
     video: { deviceId: externalCam.deviceId },
     audio: false
   });
 
+  const video = document.createElement("video");
   video.srcObject = stream;
-  video.muted = true;
   video.autoplay = true;
   video.playsInline = true;
+  video.muted = true;
 
-  video.onloadedmetadata = () => {
+  video.addEventListener("loadedmetadata", () => {
     video.play();
 
     const canvas = faceapi.createCanvasFromMedia(video);
@@ -28,39 +27,30 @@ async function init() {
     container.innerHTML = "";
     container.appendChild(canvas);
 
-    canvas.width = 360;
-    canvas.height = 640;
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
 
-    const displaySize = { width: 360, height: 640 };
+    const displaySize = { width: canvas.width, height: canvas.height };
     faceapi.matchDimensions(canvas, displaySize);
 
     setInterval(async () => {
-      if (stop) return;
-      stop = true;
-
-      const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.5 });
-      const result = await faceapi.detectSingleFace(video, options);
+      const detections = await faceapi
+        .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128 }))
+        .withFaceLandmarks(true)
+        .withFaceExpressions();
 
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.save();
-      ctx.translate(canvas.width, 0);
-      ctx.scale(-1, 1);
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      ctx.restore();
 
-      if (result) {
-        const resized = faceapi.resizeResults(result, displaySize);
-        const box = resized.detection.box;
-        ctx.strokeStyle = "#00FF00";
-        ctx.lineWidth = 4;
-        ctx.strokeRect(canvas.width - box.x - box.width, box.y, box.width, box.height);
+      if (detections) {
+        const resized = faceapi.resizeResults(detections, displaySize);
+        faceapi.draw.drawDetections(canvas, resized);
+        faceapi.draw.drawFaceLandmarks(canvas, resized);
+        faceapi.draw.drawFaceExpressions(canvas, resized);
       }
-
-      stop = false;
     }, 200);
-  };
+  });
 }
 
 init();
