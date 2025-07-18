@@ -1,3 +1,5 @@
+// script.js
+
 const emotionColors = {
   neutral: "#AAAEAA",
   happy: "#FFE048",
@@ -75,18 +77,15 @@ function lerpColor(from, to, alpha = 0.2) {
 async function getPreferredCameraStream() {
   const devices = await navigator.mediaDevices.enumerateDevices();
   const videoDevices = devices.filter((device) => device.kind === 'videoinput');
-
   let preferredDevice = videoDevices.find((device) =>
     device.label.toLowerCase().includes("elgato facecam")
   );
-
   const constraints = {
     video: preferredDevice
-      ? { deviceId: { exact: preferredDevice.deviceId }, width: 640, height: 480 }
-      : { width: 640, height: 480 },
-    audio: false,
+      ? { deviceId: { exact: preferredDevice.deviceId }, width: 1920, height: 1440 }
+      : { width: 1920, height: 1440 },
+    audio: false
   };
-
   return await navigator.mediaDevices.getUserMedia(constraints);
 }
 
@@ -121,9 +120,9 @@ async function init() {
     container.innerHTML = "";
     container.appendChild(canvas);
 
-    canvas.width = 640;
-    canvas.height = 480;
-    const displaySize = { width: 640, height: 480 };
+    canvas.width = 1920;
+    canvas.height = 1440;
+    const displaySize = { width: 1920, height: 1440 };
     faceapi.matchDimensions(canvas, displaySize);
 
     setInterval(async () => {
@@ -158,16 +157,6 @@ async function init() {
           fearful: "Fear", disgusted: "Disgust", surprised: "Surprise"
         };
 
-        const emotionImages = {
-          Neutral: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-100.png?v=1751373938451/IMOJI-100.png",
-          Joy: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-200.png?v=1751373942329/IMOJI-200.png",
-          Sadness: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-300.png?v=1751373951234/IMOJI-300.png",
-          Anger: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-400.png?v=1751373958905/IMOJI-400.png",
-          Fear: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-500.png?v=1751373957111/IMOJI-500.png",
-          Disgust: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-600.png?v=1751373966696/IMOJI-600.png",
-          Surprise: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-700.png?v=1751373970745/IMOJI-700.png"
-        };
-
         const sorted = Object.entries(expressions).sort((a, b) => b[1] - a[1]);
         const topEmotion = sorted[0][0];
         const emotionName = emotionLabels[topEmotion];
@@ -175,17 +164,17 @@ async function init() {
 
         const mirroredBoxX = canvas.width - box.x - box.width;
         ctx.strokeStyle = window._boxColor;
-        ctx.lineWidth = 4.5;
+        ctx.lineWidth = 8;
         ctx.strokeRect(mirroredBoxX, box.y, box.width, box.height);
 
-        ctx.font = "18px 'Pretendard', sans-serif";
+        ctx.font = "40px 'Pretendard', sans-serif";
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
-        const padding = 6;
-        const textX = mirroredBoxX + 2;
-        const textY = box.y - 30;
+        const padding = 12;
+        const textX = mirroredBoxX + 4;
+        const textY = box.y - 60;
         const textWidth = ctx.measureText(label).width;
-        const textHeight = 24;
+        const textHeight = 50;
 
         ctx.fillStyle = window._boxColor;
         ctx.fillRect(textX - padding, textY - padding, textWidth + padding * 2, textHeight + padding * 1.2);
@@ -194,10 +183,10 @@ async function init() {
         ctx.fillText(label, textX, textY);
 
         const graphicEl = document.getElementById("emotion-graphic");
-        if (emotionImages[emotionName]) graphicEl.src = emotionImages[emotionName];
+        if (graphicEl) graphicEl.src = `https://cdn.glitch.global/.../${emotionName}.png`;
 
         const captureImageEl = document.getElementById("capture-image");
-        captureImageEl.src = "https://cdn.glitch.global/f52c6b01-3ecd-4d0c-9574-b68cf7003384/CAPTURE%20.png?v=1751635645071/CAPTURE.png";
+        captureImageEl.src = "https://cdn.glitch.global/.../CAPTURE.png";
 
         if (emotionLinks[topEmotion]) {
           linkEl.href = emotionLinks[topEmotion];
