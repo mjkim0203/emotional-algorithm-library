@@ -24,6 +24,7 @@ html, body {
 #emotion-graphic {
   width: 6vh;
   height: auto;
+  margin-bottom: 2vh;
   transition: opacity 0.3s ease;
 }
 
@@ -35,9 +36,9 @@ html, body {
 }
 
 .prompt-text {
-  font-size: clamp(16px, 2.2vh, 24px);
+  font-size: 2.2vh;
   font-weight: 600;
-  color: #fff;
+  color: #ffffff;
 }
 
 #emotion-banner {
@@ -46,24 +47,24 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(18px, 2.4vh, 28px);
+  font-size: 2.4vh;
   font-weight: 500;
   color: white;
   background-color: #222;
   border-radius: 2vh;
+  margin-bottom: 0;
   transition: background-color 0.3s ease;
 }
 
 #canvasContainer {
   width: 90vw;
-  max-width: 100%;
   aspect-ratio: 4 / 3;
   position: relative;
 }
 
 canvas {
   width: 100%;
-  height: auto;
+  aspect-ratio: 4 / 3;
   background-color: black;
   border-radius: 1vh;
   display: block;
@@ -73,6 +74,7 @@ canvas {
   margin-top: 2vh;
   pointer-events: none;
 }
+
 .emotion-button.active {
   pointer-events: auto;
 }
@@ -86,20 +88,46 @@ canvas {
 
 #capture-text {
   color: white;
-  font-size: clamp(16px, 2.2vh, 22px);
-  text-align: center;
+  font-size: 2.2vh;
   margin-top: 2vh;
+  margin-bottom: 1vh;
+  text-align: center;
 }
 
 #capture-guide {
   color: #888;
-  font-size: clamp(14px, 1.8vh, 18px);
+  font-size: 1.8vh;
   text-align: center;
   margin-top: 0;
 }
 
-/* 모바일 대응 */
 @media (max-width: 768px) {
-  #emotion-graphic { width: 12vw; }
-  #capture-image { width: 16vw; }
+  .prompt-text {
+    font-size: 2.6vw;
+  }
+
+  #emotion-banner {
+    font-size: 3vw;
+    height: 6vh;
+  }
+
+  #canvasContainer {
+    width: 94vw;
+  }
+
+  #emotion-graphic {
+    width: 10vw;
+  }
+
+  #capture-image {
+    width: 12vw;
+  }
+
+  #capture-text {
+    font-size: 3.2vw;
+  }
+
+  #capture-guide {
+    font-size: 2.8vw;
+  }
 }
