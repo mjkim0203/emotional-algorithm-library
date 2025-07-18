@@ -19,14 +19,14 @@ const emotionLinks = {
 };
 
 const emotionImages = {
-  Neutral: "https://cdn.example.com/emojis/neutral.png",
-  Joy: "https://cdn.example.com/emojis/happy.png",
-  Sadness: "https://cdn.example.com/emojis/sad.png",
-  Anger: "https://cdn.example.com/emojis/angry.png",
-  Fear: "https://cdn.example.com/emojis/fear.png",
-  Disgust: "https://cdn.example.com/emojis/disgust.png",
-  Surprise: "https://cdn.example.com/emojis/surprise.png"
-};
+          Neutral: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-100.png?v=1751373938451/IMOJI-100.png",
+          Joy: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-200.png?v=1751373942329/IMOJI-200.png",
+          Sadness: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-300.png?v=1751373951234/IMOJI-300.png",
+          Anger: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-400.png?v=1751373958905/IMOJI-400.png",
+          Fear: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-500.png?v=1751373957111/IMOJI-500.png",
+          Disgust: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-600.png?v=1751373966696/IMOJI-600.png",
+          Surprise: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-700.png?v=1751373970745/IMOJI-700.png"
+        };
 
 const prompts = [
   "지금 어떤 감정이 드시나요?",
@@ -168,7 +168,7 @@ function handleAnalysis(result, ctx, canvas, displaySize) {
 
   const linkEl = document.getElementById("emotion-link");
   const captureImageEl = document.getElementById("capture-image");
-  captureImageEl.src = "https://cdn.example.com/capture.png";
+  captureImageEl.src = "https://cdn.glitch.global/f52c6b01-3ecd-4d0c-9574-b68cf7003384/CAPTURE%20.png?v=1751635645071/CAPTURE.png";
 
   if (emotionLinks[topEmotion]) {
     linkEl.href = emotionLinks[topEmotion];
