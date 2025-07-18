@@ -1,36 +1,46 @@
-
 const emotionColors = {
-  neutral: "#AAAEAA", happy: "#FFE048", sad: "#A7C9FF",
-  disgusted: "#D0FF3E", surprised: "#FF865C", angry: "#FF6489", fearful: "#CE6EB5"
+  neutral: "#AAAEAA",
+  happy: "#FFE048",
+  sad: "#A7C9FF",
+  disgusted: "#D0FF3E",
+  surprised: "#FF865C",
+  angry: "#FF6489",
+  fearful: "#CE6EB5"
 };
 
 const emotionLinks = {
-  happy: "https://example.com/happy", sad: "https://example.com/sad",
-  angry: "https://example.com/angry", fearful: "https://example.com/fearful",
-  disgusted: "https://example.com/disgusted", surprised: "https://example.com/surprised",
+  happy: "https://example.com/happy",
+  sad: "https://example.com/sad",
+  angry: "https://example.com/angry",
+  fearful: "https://example.com/fearful",
+  disgusted: "https://example.com/disgusted",
+  surprised: "https://example.com/surprised",
   neutral: "https://example.com/neutral"
 };
 
 const emotionImages = {
-  Neutral: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-100.png?v=1751373938451/IMOJI-100.png",
-  Joy: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-200.png?v=1751373942329/IMOJI-200.png",
-  Sadness: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-300.png?v=1751373951234/IMOJI-300.png",
-  Anger: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-400.png?v=1751373958905/IMOJI-400.png",
-  Fear: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-500.png?v=1751373957111/IMOJI-500.png",
-  Disgust: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-600.png?v=1751373966696/IMOJI-600.png",
-  Surprise: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-700.png?v=1751373970745/IMOJI-700.png"
+  Neutral: "https://cdn.example.com/emojis/neutral.png",
+  Joy: "https://cdn.example.com/emojis/happy.png",
+  Sadness: "https://cdn.example.com/emojis/sad.png",
+  Anger: "https://cdn.example.com/emojis/angry.png",
+  Fear: "https://cdn.example.com/emojis/fear.png",
+  Disgust: "https://cdn.example.com/emojis/disgust.png",
+  Surprise: "https://cdn.example.com/emojis/surprise.png"
 };
+
 const prompts = [
-  "지금 어떤 감정이 드시나요?", "당신을 가장 쉽게 웃게 만드는 건 무엇인가요?",
-  "기억에 남는 슬펐던 경험은 어떤 게 있나요?", "최근 어떤 일에 화가 났나요?",
-  "가장 최근에 무서웠던 순간은 언제였나요?", "불쾌하거나 역겨운 느낌이 들었던 상황은 있었나요?",
+  "지금 어떤 감정이 드시나요?",
+  "당신을 가장 쉽게 웃게 만드는 건 무엇인가요?",
+  "기억에 남는 슬펐던 경험은 어떤 게 있나요?",
+  "최근 어떤 일에 화가 났나요?",
+  "가장 최근에 무서웠던 순간은 언제였나요?",
+  "불쾌하거나 역겨운 느낌이 들었던 상황은 있었나요?",
   "예상치 못한 일이 생겼을 때 어떤 감정이 드시나요?"
 ];
 
 window.addEventListener("DOMContentLoaded", () => {
   const promptEl = document.querySelector(".prompt-text");
-  const randomIndex = Math.floor(Math.random() * prompts.length);
-  promptEl.innerText = prompts[randomIndex];
+  promptEl.innerText = prompts[Math.floor(Math.random() * prompts.length)];
 });
 
 function hexToRgb(hex) {
@@ -45,9 +55,8 @@ function rgbToHex(r, g, b) {
 
 function blendEmotionColor(expressions) {
   let total = 0, r = 0, g = 0, b = 0;
-  for (const emotion in expressions) {
+  for (const [emotion, weight] of Object.entries(expressions)) {
     if (emotionColors[emotion]) {
-      const weight = expressions[emotion];
       const rgb = hexToRgb(emotionColors[emotion]);
       r += rgb.r * weight;
       g += rgb.g * weight;
@@ -68,21 +77,16 @@ function lerpColor(from, to, alpha = 0.2) {
   );
 }
 
+let lastAnalysisTime = 0;
+const ANALYSIS_INTERVAL = 500;
 let video = document.createElement("video");
-let stream = null, stop = false;
 
 async function init() {
-  await faceapi.nets.tinyFaceDetector.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models");
-  await faceapi.nets.faceLandmark68TinyNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models");
-  await faceapi.nets.faceExpressionNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models");
+  await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+  await faceapi.nets.faceLandmark68TinyNet.loadFromUri("/models");
+  await faceapi.nets.faceExpressionNet.loadFromUri("/models");
 
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-  } catch (e) {
-    alert("카메라 접근 오류: " + e.message);
-    return;
-  }
-
+  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
   video.srcObject = stream;
   video.autoplay = true;
   video.muted = true;
@@ -92,82 +96,90 @@ async function init() {
     video.play();
     const canvas = faceapi.createCanvasFromMedia(video);
     const container = document.getElementById("canvasContainer");
-    const bannerEl = document.getElementById("emotion-banner");
-    const linkEl = document.getElementById("emotion-link");
-    const graphicEl = document.getElementById("emotion-graphic");
+    const ctx = canvas.getContext("2d");
 
     container.innerHTML = "";
     container.appendChild(canvas);
-    const displaySize = { width: video.videoWidth, height: video.videoHeight };
-    canvas.width = displaySize.width;
-    canvas.height = displaySize.height;
 
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const displaySize = { width: video.videoWidth, height: video.videoHeight };
     faceapi.matchDimensions(canvas, displaySize);
 
-    setInterval(async () => {
-      if (stop) return;
-      stop = true;
-
-      const result = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128 }))
-        .withFaceLandmarks().withFaceExpressions();
-
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.save();
-      ctx.translate(canvas.width, 0);
-      ctx.scale(-1, 1);
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      ctx.restore();
-
-      if (result) {
-        const resized = faceapi.resizeResults(result, displaySize);
-        const box = resized.detection.box;
-        const expressions = result.expressions;
-        const color = blendEmotionColor(expressions);
-        window._boxColor = window._boxColor ? lerpColor(window._boxColor, color) : color;
-
-        if (bannerEl) bannerEl.style.backgroundColor = window._boxColor;
-
-        const sorted = Object.entries(expressions).sort((a, b) => b[1] - a[1]);
-        const topEmotion = sorted[0][0];
-        const label = `${topEmotion.toUpperCase()} (${(sorted[0][1] * 100).toFixed(1)}%)`;
-
-        ctx.strokeStyle = window._boxColor;
-        ctx.lineWidth = 4;
-        const mirroredX = canvas.width - box.x - box.width;
-        ctx.strokeRect(mirroredX, box.y, box.width, box.height);
-
-        ctx.font = "clamp(12px, 2.4vh, 24px) Pretendard";
-        ctx.fillStyle = window._boxColor;
-        ctx.fillRect(mirroredX, box.y - 30, ctx.measureText(label).width + 10, 28);
-        ctx.fillStyle = "#000";
-        ctx.fillText(label, mirroredX + 5, box.y - 25);
-
-        const emotionName = topEmotion.charAt(0).toUpperCase() + topEmotion.slice(1).toLowerCase();
-        if (emotionImages[emotionName]) graphicEl.src = emotionImages[emotionName];
-
-        const captureImageEl = document.getElementById("capture-image");
-        captureImageEl.src = "https://cdn.glitch.global/f52c6b01-3ecd-4d0c-9574-b68cf7003384/CAPTURE%20.png?v=1751635645071/CAPTURE.png";
-
-        if (emotionLinks[topEmotion]) {
-          linkEl.href = emotionLinks[topEmotion];
-          linkEl.classList.add("active");
-        } else {
-          linkEl.href = "#";
-          linkEl.classList.remove("active");
-        }
-      }
-
-      stop = false;
-    }, 150);
+    startVideoLoop(canvas, displaySize, ctx);
   };
 }
 
+function startVideoLoop(canvas, displaySize, ctx) {
+  const loop = async () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+
+    const now = performance.now();
+    if (now - lastAnalysisTime > ANALYSIS_INTERVAL) {
+      lastAnalysisTime = now;
+      const result = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 128 }))
+        .withFaceLandmarks().withFaceExpressions();
+
+      if (result) handleAnalysis(result, ctx, canvas, displaySize);
+    }
+
+    requestAnimationFrame(loop);
+  };
+  loop();
+}
+
+function handleAnalysis(result, ctx, canvas, displaySize) {
+  const resized = faceapi.resizeResults(result, displaySize);
+  const box = resized.detection.box;
+  const expressions = result.expressions;
+  const color = blendEmotionColor(expressions);
+  window._boxColor = window._boxColor ? lerpColor(window._boxColor, color, 0.4) : color;
+
+  const emotionLabels = {
+    neutral: "Neutral", happy: "Joy", sad: "Sadness", angry: "Anger",
+    fearful: "Fear", disgusted: "Disgust", surprised: "Surprise"
+  };
+
+  const sorted = Object.entries(expressions).sort((a, b) => b[1] - a[1]);
+  const topEmotion = sorted[0][0];
+  const emotionName = emotionLabels[topEmotion];
+  const label = `${emotionName} (${(sorted[0][1] * 100).toFixed(1)}%)`;
+
+  const mirroredX = canvas.width - box.x - box.width;
+
+  ctx.strokeStyle = window._boxColor;
+  ctx.lineWidth = 4;
+  ctx.strokeRect(mirroredX, box.y, box.width, box.height);
+
+  ctx.font = "clamp(12px, 2.4vh, 24px) Pretendard";
+  ctx.fillStyle = window._boxColor;
+  ctx.fillRect(mirroredX, box.y - 30, ctx.measureText(label).width + 10, 28);
+  ctx.fillStyle = "#000";
+  ctx.fillText(label, mirroredX + 5, box.y - 25);
+
+  const graphicEl = document.getElementById("emotion-graphic");
+  if (emotionImages[emotionName]) graphicEl.src = emotionImages[emotionName];
+
+  const linkEl = document.getElementById("emotion-link");
+  const captureImageEl = document.getElementById("capture-image");
+  captureImageEl.src = "https://cdn.example.com/capture.png";
+
+  if (emotionLinks[topEmotion]) {
+    linkEl.href = emotionLinks[topEmotion];
+    linkEl.classList.add("active");
+  } else {
+    linkEl.href = "#";
+    linkEl.classList.remove("active");
+  }
+
+  const bannerEl = document.getElementById("emotion-banner");
+  if (bannerEl) bannerEl.style.backgroundColor = window._boxColor;
+}
+
 init();
-
-
-
-
-
-
