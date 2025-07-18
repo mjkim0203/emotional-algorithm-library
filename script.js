@@ -1,5 +1,3 @@
-// script.js
-
 const emotionColors = {
   neutral: "#AAAEAA",
   happy: "#FFE048",
@@ -18,6 +16,16 @@ const emotionLinks = {
   disgusted: "https://example.com/disgusted",
   surprised: "https://example.com/surprised",
   neutral: "https://example.com/neutral"
+};
+
+const emotionImages = {
+  Neutral: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-100.png?v=1751373938451/IMOJI-100.png",
+  Joy: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-200.png?v=1751373942329/IMOJI-200.png",
+  Sadness: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-300.png?v=1751373951234/IMOJI-300.png",
+  Anger: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-400.png?v=1751373958905/IMOJI-400.png",
+  Fear: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-500.png?v=1751373957111/IMOJI-500.png",
+  Disgust: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-600.png?v=1751373966696/IMOJI-600.png",
+  Surprise: "https://cdn.glitch.global/b5dd1b0e-2595-4522-b3c9-fac2d8d11eb4/IMOJI-700.png?v=1751373970745/IMOJI-700.png"
 };
 
 const prompts = [
@@ -80,12 +88,14 @@ async function getPreferredCameraStream() {
   let preferredDevice = videoDevices.find((device) =>
     device.label.toLowerCase().includes("elgato facecam")
   );
+
   const constraints = {
     video: preferredDevice
-      ? { deviceId: { exact: preferredDevice.deviceId }, width: 1920, height: 1440 }
-      : { width: 1920, height: 1440 },
+      ? { deviceId: { exact: preferredDevice.deviceId }, width: 1280, height: 960 }
+      : { width: 1280, height: 960 },
     audio: false
   };
+
   return await navigator.mediaDevices.getUserMedia(constraints);
 }
 
@@ -120,9 +130,9 @@ async function init() {
     container.innerHTML = "";
     container.appendChild(canvas);
 
-    canvas.width = 1920;
-    canvas.height = 1440;
-    const displaySize = { width: 1920, height: 1440 };
+    canvas.width = 1280;
+    canvas.height = 960;
+    const displaySize = { width: 1280, height: 960 };
     faceapi.matchDimensions(canvas, displaySize);
 
     setInterval(async () => {
@@ -178,15 +188,14 @@ async function init() {
 
         ctx.fillStyle = window._boxColor;
         ctx.fillRect(textX - padding, textY - padding, textWidth + padding * 2, textHeight + padding * 1.2);
-
         ctx.fillStyle = "#000000";
         ctx.fillText(label, textX, textY);
 
         const graphicEl = document.getElementById("emotion-graphic");
-        if (graphicEl) graphicEl.src = `https://cdn.glitch.global/.../${emotionName}.png`;
+        if (emotionImages[emotionName]) graphicEl.src = emotionImages[emotionName];
 
         const captureImageEl = document.getElementById("capture-image");
-        captureImageEl.src = "https://cdn.glitch.global/.../CAPTURE.png";
+        captureImageEl.src = "https://cdn.glitch.global/f52c6b01-3ecd-4d0c-9574-b68cf7003384/CAPTURE%20.png?v=1751635645071/CAPTURE.png";
 
         if (emotionLinks[topEmotion]) {
           linkEl.href = emotionLinks[topEmotion];
