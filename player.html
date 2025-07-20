@@ -4,45 +4,17 @@
   <meta charset="UTF-8">
   <title>MQTT Video Player</title>
   <style>
-    body {
-      background-color: black;
-    }
-
+    body { background-color: black; margin: 0; }
     video {
-      width: 100%;
-      margin: 5vh auto;
       display: block;
-    }
-
-    /* WebKit (Chrome/Safari) */
-    video::-webkit-media-controls-enclosure,
-    video::-webkit-media-controls-panel,
-    video::-webkit-media-controls-overlay-play-button,
-    video::-webkit-media-controls-timeline,
-    video::-webkit-media-controls-current-time-display,
-    video::-webkit-media-controls-play-button {
-      opacity: 0 !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-    }
-
-    /* Firefox */
-    video::-moz-media-controls {
-      opacity: 0 !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-    }
-
-    /* 모든 브라우저 공통 */
-    video[controls] {
-      --media-controls-height: 0px;
+      width: 100%;
+      margin-top: 5vh;
     }
   </style>
 </head>
 <body>
-  <video id="player" autoplay loop muted playsinline></video>
+  <video id="player" autoplay muted loop playsinline></video>
 
-  <!-- mqtt.js + HiveMQ 연결 스크립트 -->
   <script src="js/mqttws31.js"></script>
   <script src="js/TTContainer_v1.0.0.js"></script>
   <script src="js/player.js"></script>
