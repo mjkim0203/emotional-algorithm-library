@@ -9,10 +9,10 @@ const ttContainer = {
   projectCode: null,
   mqttInfo: {
     clientId: "Web_Client_" + parseInt(Math.random() * 10000, 10),
-    host: "broker.hivemq.com",
-    port: 8884,
+    host: "test.mosquitto.org",
+    port: 8081,
     useSSL: true,
-    userName: null,     // HiveMQ는 필요 없음
+    userName: null,
     password: null,
     keepAliveInterval: 30,
     isReconnect: true,
@@ -31,7 +31,6 @@ const ttContainer = {
     this.mqttInfo.topicType = topic_type;
     this.onConnected = onConnected;
 
-    // brokerUrl 옵션 처리
     if (options.brokerUrl) {
       try {
         const url = new URL(options.brokerUrl);
@@ -92,7 +91,6 @@ const ttContainer = {
       }
     };
 
-    // ✅ HiveMQ용: userName/password는 있을 때만 추가
     if (typeof this.mqttInfo.userName === 'string') connectOptions.userName = this.mqttInfo.userName;
     if (typeof this.mqttInfo.password === 'string') connectOptions.password = this.mqttInfo.password;
 
