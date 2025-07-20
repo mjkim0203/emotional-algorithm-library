@@ -3,64 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <title>MQTT Sender</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #f0f0f0;
-      padding: 2rem;
-    }
-
-    input, button {
-      font-size: 1rem;
-      padding: 0.6rem;
-      width: 100%;
-      margin-top: 1rem;
-      box-sizing: border-box;
-    }
-
-    label {
-      font-size: 1rem;
-      display: block;
-      margin-bottom: 0.5rem;
-      margin-top: 1.5rem;
-    }
-  </style>
 </head>
 <body>
-  <h2>MQTT 영상 URL 전송</h2>
-
-  <label for="videoUrl">영상 .mp4 주소 입력:</label>
-  <input id="videoUrl" type="text" placeholder="https://example.com/video.mp4" />
-
+  <h2>영상 URL 입력 후 전송</h2>
+  <input id="videoUrl" type="text" placeholder="https://example.com/video.mp4" style="width: 80%;" />
   <button onclick="publishMessage()">MQTT 메시지 전송</button>
 
-  <!-- 반드시 가장 먼저 로드 -->
-  <script src="js/mqttws31.js"></script>
-
-  <!-- TTContainer 사용 -->
+  <script src="js/paho-mqtt-min.js"></script>
   <script src="js/TTContainer.js"></script>
-
   <script>
-    const projectCode = "sample";
-
-    ttContainer.mqttConnect(
-      projectCode,
+    TTContainer.mqttConnect(
+      "sample",
       TOPIC_TYPE.CONTROL,
-      () => console.log("✅ MQTT 연결 성공 (CONTROL)"),
-      {
-        brokerUrl: "wss://test.mosquitto.org:8081/mqtt"
-      }
+      () => console.log("✅ MQTT 연결 성공 (CONTROL)")
     );
 
     function publishMessage() {
       const url = document.getElementById("videoUrl").value.trim();
-
       if (!url.endsWith(".mp4")) {
-        alert("⚠️ .mp4 파일 링크를 입력하세요.");
+        alert("⚠️ .mp4 확장자 필요");
         return;
       }
-
-      ttContainer.sendMessage(url); // → DISPLAY 토픽으로 publish
+      TTContainer.sendMessage(url);
     }
   </script>
 </body>
