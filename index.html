@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="main.css" />
+</head>
+<body onclick="window.location.href='login.html'">
+  <div class="fullscreen">
+    <video autoplay muted loop playsinline>
+      <source src="https://res.cloudinary.com/diyfa1zkn/video/upload/v1753000103/step1-splash-video_wy4ga6.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: black;
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    .fullscreen {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      pointer-events: none; /* 클릭 방지 */
+    }
+  </style>
+</body>
+</html>
