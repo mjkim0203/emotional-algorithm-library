@@ -40,8 +40,8 @@
 <body>
   <video id="player" autoplay loop muted playsinline></video>
 
-  <!-- ✅ CDN으로 mqttws31.js 로드 -->
-  <script src="https://unpkg.com/paho-mqtt/mqttws31.min.js"></script>
+  <!-- ✅ 이 순서 꼭 지키세요 -->
+  <script src="https://unpkg.com/paho-mqtt@1.1.0/mqttws31.min.js"></script>
   <script src="js/TTContainer.js"></script>
   <script src="js/player.js"></script>
 </body>
