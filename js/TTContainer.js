@@ -28,10 +28,18 @@ TTContainer.prototype.mqttConnect = function (projectCode, topicType, callback, 
   };
 
   this.mqttClient.onMessageArrived = (message) => {
-    console.log("📨 MQTT 메시지 도착:", message.destinationName, message.payloadString);
-    if (this.onMessage) {
-      this.onMessage(message.payloadString);
+    let payload = message.payloadString;
+    if (!payload || payload.length === 0) {
+      try {
+        payload = new TextDecoder("utf-8").decode(message.payloadBytes);
+      } catch (e) {
+        console.error("❌ 메시지 디코딩 실패:", e);
+        return;
+      }
     }
+
+    console.log("📨 MQTT 메시지 도착:", message.destinationName, payload);
+    if (this.onMessage) this.onMessage(payload);
   };
 
   this.mqttClient.connect({
@@ -39,7 +47,6 @@ TTContainer.prototype.mqttConnect = function (projectCode, topicType, callback, 
     onSuccess: () => {
       console.log("✅ MQTT 연결 성공");
       this.mqttConnected = true;
-
       const topic = projectCode + topicType;
       this.subscribe(topic);
       if (callback) callback();
