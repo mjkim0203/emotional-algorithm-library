@@ -30,10 +30,7 @@
     ttContainer.mqttConnect(
       projectCode,
       TOPIC_TYPE.CONTROL,
-      () => console.log("✅ MQTT 연결 성공 (CONTROL 모드)"),
-      {
-        brokerUrl: "wss://test.mosquitto.org:8081/mqtt"
-      }
+      () => console.log("✅ MQTT 연결 성공 (CONTROL 모드)")
     );
 
     function publishMessage() {
