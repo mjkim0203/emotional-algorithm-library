@@ -1,23 +1,27 @@
 console.log("▶▶▶ player.js 로드됨");
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log("▶ DOMContentLoaded 발생");
 
   const projectCode = "sample";
+
+  // 포트 지정 없이 mqttInfo 사용
   ttContainer.mqttConnect(
     projectCode,
     TOPIC_TYPE.DISPLAY,
-    () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
-    {
-      // ← 딱 이 옵션 블록 하나만!
-      brokerUrl: "wss://broker.hivemq.com:8000/mqtt"
-    }
+    () => console.log("✅ MQTT 연결 성공 (DISPLAY)")
   );
 
   ttContainer.onMessage = message => {
     console.log("📨 수신 메시지:", message);
+
     const video = document.getElementById("player");
     video.src = message;
     video.load();
-    video.play().catch(err => console.error(err));
+    video.play().then(() => {
+      console.log("▶ 비디오 자동 재생됨");
+    }).catch(err => {
+      console.error("❌ 재생 오류:", err);
+    });
   };
 });
