@@ -19,18 +19,20 @@
 </head>
 <body>
   <h2>영상 URL 입력 후 전송</h2>
-  <input id="videoUrl" type="text" placeholder="https://example.com/video.mp4" />
+  <input id="videoUrl" type="text" placeholder="https://yourdomain.com/video.mp4" />
   <button onclick="publishMessage()">MQTT 메시지 전송</button>
 
+  <!-- paho-mqtt 먼저 -->
   <script src="js/paho-mqtt-min.js"></script>
   <script src="js/TTContainer.js"></script>
+
   <script>
     const projectCode = "sample";
 
     ttContainer.mqttConnect(
       projectCode,
       TOPIC_TYPE.CONTROL,
-      () => console.log("✅ MQTT 연결 성공 (CONTROL 모드)"),
+      () => console.log("✅ MQTT 연결 성공 (CONTROL)"),
       {
         brokerUrl: "wss://test.mosquitto.org:8081/mqtt"
       }
@@ -44,7 +46,7 @@
         return;
       }
 
-      ttContainer.sendMessage(url);
+      ttContainer.sendMessage(url); // DISPLAY 수신
     }
   </script>
 </body>
