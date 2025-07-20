@@ -1,57 +1,46 @@
-// js/TTContainer.js
-class TTContainer {
-  constructor() {
-    this.mqttClient = null;
-    this.onMessage = () => {};
-  }
+const TOPIC_TYPE = {
+  CONTROL: "control",
+  DISPLAY: "display"
+};
 
-  mqttConnect(projectCode, topicType, onConnected, opts = {}) {
-    const broker = opts.brokerUrl;
-    console.log(`brokerUrl:${broker} 적용됨`);
-    const clientId = 'client_' + Math.random().toString(16).slice(2);
-    this.mqttClient = new Paho.MQTT.Client(
-      broker,
-      clientId
-    );
+const ttContainer = {
+  client: null,
+  topic: null,
 
-    this.mqttClient.onConnectionLost = response => {
-      console.error("MQTT 연결 끊김:", response.errorMessage);
+  mqttConnect: function (prefix, type, onConnect, options = {}) {
+    const brokerUrl = options.brokerUrl || "wss://test.mosquitto.org:8081/mqtt";
+    this.topic = `${prefix}/goldstar/${type}`;
+
+    console.log("브로커 URL:", brokerUrl);
+    console.log("구독 토픽:", this.topic);
+
+    this.client = new Paho.MQTT.Client(brokerUrl, "client-" + parseInt(Math.random() * 10000));
+
+    this.client.onConnectionLost = function (response) {
+      console.warn("연결 끊김", response.errorMessage);
     };
 
-    this.mqttClient.onMessageArrived = msg => {
-      console.log("📝 Arrived:", msg.destinationName, msg.payloadString);
-      this.onMessage(msg.payloadString);
-    };
-
-    this.mqttClient.connect({
-      useSSL: broker.startsWith('wss'),
-      onSuccess: () => {
-        const topic = `${projectCode}/${topicType.toLowerCase()}`;
-        this.mqttClient.subscribe(topic);
-        console.log("✅ MQTT 연결 성공 (" + topicType + ")");
-        onConnected();
-      },
-      onFailure: e => {
-        console.error("❌ MQTT 연결 실패:", e.errorMessage);
+    this.client.onMessageArrived = function (message) {
+      console.log("수신된 메시지:", message.payloadString);
+      if (typeof ttContainer.onMessage === "function") {
+        ttContainer.onMessage(message.payloadString);
       }
-    });
-  }
+    };
 
-  sendMessage(payload) {
-    if (!this.mqttClient || !this.mqttClient.isConnected()) {
-      console.error("⚠️ MQTT 미연결 상태에서 sendMessage 호출");
+    this.client.connect({
+      onSuccess: onConnect,
+      useSSL: true
+    });
+  },
+
+  sendMessage: function (payload) {
+    if (!this.client || !this.topic) {
+      console.error("MQTT가 연결되지 않음");
       return;
     }
-    const msg = new Paho.MQTT.Message(payload);
-    msg.destinationName = `sample/display`;
-    this.mqttClient.send(msg);
-    console.log("📨 메시지 발송:", payload);
+
+    const message = new Paho.MQTT.Message(payload);
+    message.destinationName = this.topic;
+    this.client.send(message);
   }
-}
-
-const ttContainer = new TTContainer();
-
-const TOPIC_TYPE = {
-  DISPLAY: 'DISPLAY',
-  CONTROL: 'CONTROL'
 };
