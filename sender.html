@@ -5,27 +5,12 @@
   <title>MQTT Sender</title>
 </head>
 <body>
-  <input id="videoUrl" placeholder="https://... .mp4">
+  <input id="videoUrl" placeholder="https://... .mp4" />
   <button onclick="publishMessage()">전송</button>
 
+  <!-- 순서 중요 -->
   <script src="js/paho-mqtt-min.js"></script>
   <script src="js/TTContainer.js"></script>
-  <script>
-    ttContainer.mqttConnect(
-      "sample",
-      TOPIC_TYPE.CONTROL,
-      () => console.log("✅ MQTT 연결 성공 (CONTROL)"),
-      { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
-    );
-
-    function publishMessage() {
-      const url = document.getElementById("videoUrl").value;
-      if (!url.endsWith(".mp4")) {
-        alert("⚠️ .mp4 링크 입력 필요");
-        return;
-      }
-      ttContainer.sendMessage(url);
-    }
-  </script>
+  <script src="js/sender.js"></script>
 </body>
 </html>
