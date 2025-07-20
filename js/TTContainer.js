@@ -16,7 +16,7 @@ const ttContainer = {
     console.log("📡 구독 토픽:", topic);
 
     const clientId = "client_" + Math.random().toString(16).substr(2, 8);
-    const client = new Paho.Client(brokerUrl, clientId);
+    const client = new Paho.Client("test.mosquitto.org", 8081, "/mqtt", clientId);
 
     client.onConnectionLost = (responseObject) => {
       console.error("🔌 연결 끊김:", responseObject.errorMessage);
@@ -41,7 +41,7 @@ const ttContainer = {
       onFailure: (error) => {
         console.error("❌ MQTT 연결 실패:", error);
       },
-      useSSL: brokerUrl.startsWith("wss://")
+      useSSL: true,
     });
   },
 
