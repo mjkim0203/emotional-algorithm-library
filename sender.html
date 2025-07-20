@@ -1,4 +1,3 @@
-<!-- ✅ sender.html (상대경로 자동 절대화 적용) -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -20,10 +19,10 @@
 </head>
 <body>
   <h2>영상 URL 입력 후 전송</h2>
-  <input id="videoUrl" type="text" placeholder="videos/anger.mp4" />
+  <input id="videoUrl" type="text" placeholder="https://example.com/video.mp4" />
   <button onclick="publishMessage()">MQTT 메시지 전송</button>
 
-  <script src="js/mqttws31.js"></script>
+  <script src="js/paho-mqtt-min.js"></script>
   <script src="js/TTContainer.js"></script>
   <script>
     const projectCode = "sample";
@@ -38,20 +37,13 @@
     );
 
     function publishMessage() {
-      let url = document.getElementById("videoUrl").value.trim();
+      const url = document.getElementById("videoUrl").value.trim();
 
       if (!url.endsWith(".mp4")) {
         alert("⚠️ .mp4 링크를 입력해주세요");
         return;
       }
 
-      // 상대경로 → 절대경로로 자동 변환
-      if (!url.startsWith("http")) {
-        const base = location.origin + location.pathname.replace(/\/[^/]*$/, "/");
-        url = base + url;
-      }
-
-      console.log("📤 전송 메시지:", url);
       ttContainer.sendMessage(url);
     }
   </script>
