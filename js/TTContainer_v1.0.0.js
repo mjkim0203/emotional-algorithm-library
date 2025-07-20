@@ -122,3 +122,13 @@ const ttContainer = {
 	onConnected: function () {},
 	onMessage: function () {},
 };
+
+subscribe(topic) {
+	if (!this.mqttClient || !this.mqttConnected) {
+		console.error("⚠️ MQTT 클라이언트가 연결되지 않았습니다.");
+		return;
+	}
+	this.mqttClient.subscribe(topic, { qos: 0 });
+	console.log("📡 구독 완료:", topic); // ✅ 추가
+}
+
