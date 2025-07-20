@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Video Player</title>
+  <meta charset="UTF-8" />
+  <title>MQTT Video Player</title>
   <style>
     body {
       background-color: black;
+      margin: 0;
     }
     video {
-      width: 100%;
-      margin: 5vh auto;
-      display: block;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
   <video id="player" autoplay loop muted playsinline></video>
 
-  <script src="js/paho-mqtt-min.js"></script>
+  <!-- ✅ 반드시 먼저 로드 -->
+  <script src="js/mqttws31.js"></script>
+
+  <!-- TTContainer는 두 번째 -->
   <script src="js/TTContainer.js"></script>
+
+  <!-- 마지막에 player.js -->
   <script src="js/player.js"></script>
 </body>
 </html>
