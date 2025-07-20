@@ -1,3 +1,4 @@
+<!-- ✅ sender.html 최종 수정본 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -19,17 +20,17 @@
 </head>
 <body>
   <h2>영상 URL 입력 후 전송</h2>
-  <input id="videoUrl" type="text" placeholder="https://example.com/video.mp4" />
+  <input id="videoUrl" type="text" placeholder="videos/anger.mp4" />
   <button onclick="publishMessage()">MQTT 메시지 전송</button>
 
   <script src="js/mqttws31.js"></script>
-  <script src="js/TTContainer_v1.0.0.js"></script>
+  <script src="js/TTContainer.js"></script>
   <script>
     const projectCode = "sample";
 
     ttContainer.mqttConnect(
       projectCode,
-      TOPIC_TYPE.CONTROL, // → CONTROL로 전송할 예정
+      TOPIC_TYPE.CONTROL,
       () => console.log("✅ MQTT 연결 성공 (CONTROL 모드)"),
       {
         brokerUrl: "wss://test.mosquitto.org:8081/mqtt"
@@ -44,7 +45,8 @@
         return;
       }
 
-      ttContainer.sendMessage(url); // ← player.html에서 DISPLAY 모드로 수신
+      console.log("📤 전송 메시지:", url);
+      ttContainer.sendMessage(url);
     }
   </script>
 </body>
