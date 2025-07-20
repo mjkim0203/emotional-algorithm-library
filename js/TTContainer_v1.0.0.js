@@ -1,5 +1,3 @@
-// TTContainer_v1.0.0.js
-
 const TOPIC_TYPE = {
   DISPLAY: "/goldstar/display",
   CONTROL: "/goldstar/control"
