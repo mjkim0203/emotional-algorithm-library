@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>MQTT Sender</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      padding: 2rem;
+    }
+    input, button {
+      font-size: 1rem;
+      padding: 0.5rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h2>영상 URL 입력 후 전송</h2>
+  <input id="videoUrl" type="text" placeholder="https://example.com/video.mp4" />
+  <button onclick="publishMessage()">MQTT 메시지 전송</button>
+
+  <script src="js/mqttws31.js"></script>
+  <script src="js/TTContainer_v1.0.0.js"></script>
+  <script>
+    const projectCode = "sample";
+
+    ttContainer.mqttConnect(
+      projectCode,
+      TOPIC_TYPE.CONTROL, // → CONTROL로 전송할 예정
+      () => console.log("✅ MQTT 연결 성공 (CONTROL 모드)"),
+      {
+        brokerUrl: "wss://test.mosquitto.org:8081/mqtt"
+      }
+    );
+
+    function publishMessage() {
+      const url = document.getElementById("videoUrl").value.trim();
+
+      if (!url.endsWith(".mp4")) {
+        alert("⚠️ .mp4 링크를 입력해주세요");
+        return;
+      }
+
+      ttContainer.sendMessage(url); // ← player.html에서 DISPLAY 모드로 수신
+    }
+  </script>
+</body>
+</html>
