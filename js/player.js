@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     TOPIC_TYPE.DISPLAY,
     () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
     {
-      brokerUrl: "wss://broker.hivemq.com:8000/mqtt"
+      brokerUrl: "wss://test.mosquitto.org:8081/mqtt"  // Mosquitto 브로커
     }
   );
 
