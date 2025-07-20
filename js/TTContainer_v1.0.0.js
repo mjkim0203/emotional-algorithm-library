@@ -12,7 +12,7 @@ const ttContainer = {
     host: "broker.hivemq.com",
     port: 8884,
     useSSL: true,
-    userName: null,
+    userName: null,     // HiveMQ는 필요 없음
     password: null,
     keepAliveInterval: 30,
     isReconnect: true,
@@ -31,12 +31,13 @@ const ttContainer = {
     this.mqttInfo.topicType = topic_type;
     this.onConnected = onConnected;
 
-    // (옵션으로 brokerUrl 지정 가능하도록 확장)
+    // brokerUrl 옵션 처리
     if (options.brokerUrl) {
       try {
         const url = new URL(options.brokerUrl);
         this.mqttInfo.host = url.hostname;
         this.mqttInfo.port = parseInt(url.port);
+        this.mqttInfo.useSSL = url.protocol === "wss:";
         console.log("🌐 brokerUrl 적용됨:", this.mqttInfo.host, this.mqttInfo.port);
       } catch (e) {
         console.warn("⚠️ brokerUrl 파싱 실패:", options.brokerUrl);
@@ -68,18 +69,15 @@ const ttContainer = {
       });
     };
 
-    this.mqttClient.connect({
+    const connectOptions = {
       useSSL: this.mqttInfo.useSSL,
       keepAliveInterval: this.mqttInfo.keepAliveInterval,
-      userName: this.mqttInfo.userName,
-      password: this.mqttInfo.password,
       onSuccess: () => {
         this.mqttConnected = true;
         console.log("✅ MQTT 연결 성공:", this.mqttInfo.host + ":" + this.mqttInfo.port);
 
         const topic = this.projectCode + this.mqttInfo.topicType;
         this.subscribe(topic);
-
         this.onConnected();
       },
       onFailure: (err) => {
@@ -92,7 +90,13 @@ const ttContainer = {
           }, 3000);
         }
       }
-    });
+    };
+
+    // ✅ HiveMQ용: userName/password는 있을 때만 추가
+    if (typeof this.mqttInfo.userName === 'string') connectOptions.userName = this.mqttInfo.userName;
+    if (typeof this.mqttInfo.password === 'string') connectOptions.password = this.mqttInfo.password;
+
+    this.mqttClient.connect(connectOptions);
   },
 
   subscribe(topic) {
