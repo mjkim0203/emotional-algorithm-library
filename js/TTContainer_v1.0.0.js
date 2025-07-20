@@ -1,29 +1,29 @@
 'use strict';
 
 const TOPIC_TYPE = {
-	DISPLAY : "/goldstar/display",
-	CONTROL : "/goldstar/control",
+	DISPLAY: "/goldstar/display",
+	CONTROL: "/goldstar/control",
 };
 
 const ttContainer = {
-	projectCode : null,
-    mqttInfo : {
-        clientId : "Web_Client_" + parseInt(Math.random() * 100 * 100, 10),
-        host : "broker.hivemq.com",            // ✅ HiveMQ broker
-        port : 8884,                            // ✅ HiveMQ WSS port
-        useSSL: true,                           // ✅ always WSS
-        userName : null,                        // ❌ HiveMQ public broker: no auth
+	projectCode: null,
+	mqttInfo: {
+		clientId: "Web_Client_" + parseInt(Math.random() * 10000, 10),
+		host: "broker.hivemq.com",          // ✅ HiveMQ broker
+		port: 8884,                          // ✅ HiveMQ WSS 포트
+		useSSL: true,                        // ✅ SSL 사용
+		userName: null,                      // HiveMQ public broker는 인증 불필요
 		password: null,
-        keepAliveInterval: 30,
+		keepAliveInterval: 30,
 		isReconnect: true,
 		topicType: null,
-    },
-    mqttClient : null,
-    mqttConnected : false,
+	},
+	mqttClient: null,
+	mqttConnected: false,
 
-    mqttConnect(projectCode, topic_type, onConnected = function() {}) {
+	mqttConnect(projectCode, topic_type, onConnected = function () {}) {
 		if (!topic_type) {
-			console.error("topic_type is required for mqttConnect");
+			console.error("❗ mqttConnect: topic_type이 필요합니다.");
 			return;
 		}
 
@@ -31,75 +31,69 @@ const ttContainer = {
 		this.projectCode = projectCode;
 		this.mqttInfo.topicType = topic_type;
 
-        // ✅ HiveMQ requires "/mqtt" path
-        this.mqttClient = new Paho.MQTT.Client(
+		this.mqttClient = new Paho.MQTT.Client(
 			this.mqttInfo.host,
 			this.mqttInfo.port,
-			"/mqtt",                            // ✅ HiveMQ path
+			"/mqtt", // ✅ HiveMQ WebSocket 경로
 			this.mqttInfo.clientId
 		);
 
-        this.mqttClient.onConnectionLost = function (responseObject) {
-            console.warn("onConnectionLost", responseObject?.errorMessage);
-            ttContainer.mqttConnected = false;
+		this.mqttClient.onConnectionLost = (responseObject) => {
+			console.warn("MQTT 연결 끊김:", responseObject?.errorMessage);
+			this.mqttConnected = false;
 
-			if (ttContainer.mqttInfo.isReconnect) {
+			if (this.mqttInfo.isReconnect) {
 				setTimeout(() => {
-					ttContainer.mqttConnect(projectCode, topic_type);
-				}, 5000);
+					this.mqttConnect(projectCode, topic_type);
+				}, 3000);
 			}
-        };
+		};
 
-        this.mqttClient.onMessageArrived = function (message) {
-            setTimeout(() => {
-                ttContainer.recvMessage(message.destinationName, message.payloadString);
-            });
-        };
+		this.mqttClient.onMessageArrived = (message) => {
+			setTimeout(() => {
+				this.recvMessage(message.destinationName, message.payloadString);
+			});
+		};
 
-        this.mqttClient.connect({
-            useSSL: this.mqttInfo.useSSL,
-            keepAliveInterval: this.mqttInfo.keepAliveInterval,
-            onSuccess: () => {
-				ttContainer.mqttConnected = true;
-				console.log("✅ MQTT Connected to HiveMQ");
+		this.mqttClient.connect({
+			useSSL: this.mqttInfo.useSSL,
+			keepAliveInterval: this.mqttInfo.keepAliveInterval,
+			onSuccess: () => {
+				this.mqttConnected = true;
+				console.log("✅ HiveMQ 연결 성공");
 
-				const topic = ttContainer.projectCode + ttContainer.mqttInfo.topicType;
-				ttContainer.subscribe(topic);
+				const topic = this.projectCode + this.mqttInfo.topicType;
+				this.subscribe(topic);
 
-				ttContainer.onConnected();
-            },
-            onFailure: (err) => {
-                ttContainer.mqttConnected = false;
-                console.error("❌ MQTT Connect Failed:", err.errorMessage);
+				this.onConnected();
+			},
+			onFailure: (err) => {
+				this.mqttConnected = false;
+				console.error("❌ HiveMQ 연결 실패:", err.errorMessage);
 
-				if (ttContainer.mqttInfo.isReconnect) {
+				if (this.mqttInfo.isReconnect) {
 					setTimeout(() => {
-						ttContainer.mqttConnect(projectCode, topic_type);
-					}, 5000);
+						this.mqttConnect(projectCode, topic_type);
+					}, 3000);
 				}
-            }
-        });
-    },
+			}
+		});
+	},
 
 	subscribe(topic) {
 		if (!this.mqttClient || !this.mqttConnected) {
-			return console.error("MQTT Client is not connected.");
+			console.error("⚠️ MQTT 클라이언트가 연결되지 않았습니다.");
+			return;
 		}
 		this.mqttClient.subscribe(topic, { qos: 0 });
 	},
 
 	publish(topic, message, qos = 0) {
 		if (!this.mqttClient || !this.mqttConnected) {
-			return console.error("MQTT Client is not connected.");
+			console.error("⚠️ MQTT 클라이언트가 연결되지 않았습니다.");
+			return;
 		}
 		this.mqttClient.send(topic, message, qos);
-	},
-
-	recvMessage(topic, message) {
-		if (!this.mqttClient || !this.mqttConnected) {
-			return console.error("MQTT Client is not connected.");
-		}
-		this.onMessage(message);
 	},
 
 	sendMessage(message) {
@@ -109,6 +103,14 @@ const ttContainer = {
 		this.publish(topic, message);
 	},
 
+	recvMessage(topic, message) {
+		if (!this.mqttConnected) {
+			console.error("수신 중 연결 안됨");
+			return;
+		}
+		this.onMessage(message);
+	},
+
 	onConnected: function () {},
-	onMessage: function () {}
+	onMessage: function () {},
 };
