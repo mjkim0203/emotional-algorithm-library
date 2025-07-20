@@ -1,50 +1,71 @@
+// TTContainer.js
+
 const TOPIC_TYPE = {
-  CONTROL: 'control',
-  DISPLAY: 'display'
+  DISPLAY: "display",
+  CONTROL: "control"
 };
 
 const ttContainer = {
-  client: null,
+  mqttClient: null,
+  mqttConnected: false,
+  onMessage: null,
 
-  mqttConnect: function(projectCode, type, onConnected, options) {
+  mqttConnect(projectCode, type, onSuccess, mqttInfo = {}) {
+    const brokerHost = mqttInfo.brokerUrl?.replace(/^wss?:\/\//, "").split(":")[0] || "test.mosquitto.org";
+    const brokerPort = Number(mqttInfo.brokerUrl?.match(/:(\d+)/)?.[1]) || 8081;
+    const brokerPath = mqttInfo.brokerUrl?.split(brokerPort)[1] || "/mqtt";
+
+    const clientId = "client_" + Math.random().toString(16).substr(2, 8);
     const topic = `${projectCode}/goldstar/${type}`;
-    const clientId = `client_${Math.random().toString(16).substr(2, 8)}`;
-    const brokerUrl = options.brokerUrl;
 
-    console.log("브로커 URL:", brokerUrl);
-    console.log("구독 토픽:", topic);
+    console.log("📡 Connecting to broker:", brokerHost, brokerPort, brokerPath);
 
-    this.client = new Paho.Client(brokerUrl, clientId);
+    // ✅ 핵심: Paho.MQTT.Client 사용
+    this.mqttClient = new Paho.MQTT.Client(brokerHost, brokerPort, brokerPath, clientId);
 
-    this.client.onConnectionLost = (response) => {
-      console.warn("🔌 연결 끊김:", response.errorMessage);
+    this.mqttClient.onConnectionLost = response => {
+      console.error("🚫 MQTT 연결 끊김:", response.errorMessage);
+      this.mqttConnected = false;
     };
 
-    this.client.onMessageArrived = (message) => {
-      console.log("📩 메시지 수신:", message.payloadString);
-      if (typeof this.onMessage === 'function') {
+    this.mqttClient.onMessageArrived = message => {
+      console.log("📨 MQTT 수신 메시지:", message.payloadString);
+      if (typeof this.onMessage === "function") {
         this.onMessage(message.payloadString);
       }
     };
 
-    this.client.connect({
+    this.mqttClient.connect({
+      useSSL: true,
       onSuccess: () => {
-        console.log("✅ 연결 성공");
-        this.client.subscribe(topic);
-        if (onConnected) onConnected();
+        console.log("✅ MQTT 연결 성공:", topic);
+        this.mqttConnected = true;
+        this.mqttClient.subscribe(topic);
+        console.log("📡 구독 완료:", topic);
+        if (typeof onSuccess === "function") onSuccess();
       },
-      onFailure: (err) => {
-        console.error("❌ 연결 실패:", err.errorMessage);
+      onFailure: err => {
+        console.error("❌ MQTT 연결 실패:", err.errorMessage);
       }
     });
+
+    this._currentTopic = topic;
   },
 
-  sendMessage: function(msg) {
-    const topic = `${"sample"}/goldstar/display`;
-    const message = new Paho.Message(msg);
-    message.destinationName = topic;
-    this.client.send(message);
-  },
+  sendMessage(message) {
+    if (!this.mqttClient || !this.mqttConnected) {
+      console.error("⚠️ MQTT 클라이언트가 연결되지 않았습니다.");
+      return;
+    }
 
-  onMessage: null
+    if (!this._currentTopic) {
+      console.error("⚠️ 전송할 토픽이 설정되지 않았습니다.");
+      return;
+    }
+
+    const msg = new Paho.MQTT.Message(message);
+    msg.destinationName = this._currentTopic;
+    this.mqttClient.send(msg);
+    console.log("📤 메시지 전송됨:", message);
+  }
 };
