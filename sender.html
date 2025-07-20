@@ -5,23 +5,21 @@
   <title>MQTT Sender</title>
 </head>
 <body>
-  <h2>영상 URL 입력 후 전송</h2>
-  <input id="videoUrl" type="text" placeholder="https://example.com/video.mp4" style="width: 80%;" />
-  <button onclick="publishMessage()">MQTT 메시지 전송</button>
+  <h2>영상 URL 입력 후 MQTT 전송</h2>
+  <input id="videoUrl" type="text" placeholder="https://yourdomain.com/video.mp4" />
+  <button onclick="send()">전송</button>
 
   <script src="js/paho-mqtt-min.js"></script>
   <script src="js/TTContainer.js"></script>
   <script>
-    TTContainer.mqttConnect(
-      "sample",
-      TOPIC_TYPE.CONTROL,
-      () => console.log("✅ MQTT 연결 성공 (CONTROL)")
-    );
+    TTContainer.mqttConnect("sample", "CONTROL", () => {
+      console.log("✅ MQTT 연결 성공 (CONTROL)");
+    });
 
-    function publishMessage() {
+    function send() {
       const url = document.getElementById("videoUrl").value.trim();
       if (!url.endsWith(".mp4")) {
-        alert("⚠️ .mp4 확장자 필요");
+        alert(".mp4 주소만 입력해주세요");
         return;
       }
       TTContainer.sendMessage(url);
