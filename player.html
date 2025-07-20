@@ -5,8 +5,8 @@
   <title>MQTT Video Player</title>
   <style>
     body {
-      background-color: black;
       margin: 0;
+      background-color: black;
     }
     video {
       width: 100vw;
@@ -18,8 +18,13 @@
 <body>
   <video id="player" autoplay loop muted playsinline></video>
 
+  <!-- ✅ 반드시 paho-mqtt-min.js 먼저 -->
   <script src="js/paho-mqtt-min.js"></script>
+
+  <!-- TTContainer는 두 번째 -->
   <script src="js/TTContainer.js"></script>
+
+  <!-- 마지막에 player.js -->
   <script src="js/player.js"></script>
 </body>
 </html>
