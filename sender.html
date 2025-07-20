@@ -1,4 +1,4 @@
-<!-- ✅ sender.html 최종 수정본 -->
+<!-- ✅ sender.html (상대경로 자동 절대화 적용) -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -38,11 +38,17 @@
     );
 
     function publishMessage() {
-      const url = document.getElementById("videoUrl").value.trim();
+      let url = document.getElementById("videoUrl").value.trim();
 
       if (!url.endsWith(".mp4")) {
         alert("⚠️ .mp4 링크를 입력해주세요");
         return;
+      }
+
+      // 상대경로 → 절대경로로 자동 변환
+      if (!url.startsWith("http")) {
+        const base = location.origin + location.pathname.replace(/\/[^/]*$/, "/");
+        url = base + url;
       }
 
       console.log("📤 전송 메시지:", url);
