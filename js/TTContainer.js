@@ -1,46 +1,50 @@
-const TTContainer = (() => {
-  let client = null;
-  let onMessageCallback = null;
+const TOPIC_TYPE = {
+  CONTROL: 'control',
+  DISPLAY: 'display'
+};
 
-  const mqttConnect = (projectCode, topicType, onConnect, options = {}) => {
-    const brokerUrl = options.brokerUrl || "wss://test.mosquitto.org:8081/mqtt";
-    const topic = `${projectCode}/goldstar/${topicType.toLowerCase()}`;
-    console.log("📡 브로커 URL:", brokerUrl);
-    console.log("📩 구독 토픽:", topic);
+const ttContainer = {
+  client: null,
 
-    client = new Paho.MQTT.Client(brokerUrl, `client-${Date.now()}`);
+  mqttConnect: function(projectCode, type, onConnected, options) {
+    const topic = `${projectCode}/goldstar/${type}`;
+    const clientId = `client_${Math.random().toString(16).substr(2, 8)}`;
+    const brokerUrl = options.brokerUrl;
 
-    client.onConnectionLost = (responseObject) => {
-      console.error("❌ 연결 끊김:", responseObject.errorMessage);
+    console.log("브로커 URL:", brokerUrl);
+    console.log("구독 토픽:", topic);
+
+    this.client = new Paho.Client(brokerUrl, clientId);
+
+    this.client.onConnectionLost = (response) => {
+      console.warn("🔌 연결 끊김:", response.errorMessage);
     };
 
-    client.onMessageArrived = (message) => {
-      console.log("📨 수신 메시지:", message.payloadString);
-      if (onMessageCallback) onMessageCallback(message.payloadString);
+    this.client.onMessageArrived = (message) => {
+      console.log("📩 메시지 수신:", message.payloadString);
+      if (typeof this.onMessage === 'function') {
+        this.onMessage(message.payloadString);
+      }
     };
 
-    client.connect({
+    this.client.connect({
       onSuccess: () => {
-        console.log("✅ MQTT 연결 성공");
-        client.subscribe(topic);
-        if (onConnect) onConnect();
+        console.log("✅ 연결 성공");
+        this.client.subscribe(topic);
+        if (onConnected) onConnected();
       },
-      useSSL: true
+      onFailure: (err) => {
+        console.error("❌ 연결 실패:", err.errorMessage);
+      }
     });
-  };
+  },
 
-  const sendMessage = (msg, topic = "sample/goldstar/display") => {
-    if (!client || !msg) return;
-    const message = new Paho.MQTT.Message(msg);
+  sendMessage: function(msg) {
+    const topic = `${"sample"}/goldstar/display`;
+    const message = new Paho.Message(msg);
     message.destinationName = topic;
-    client.send(message);
-  };
+    this.client.send(message);
+  },
 
-  return {
-    mqttConnect,
-    sendMessage,
-    set onMessage(callback) {
-      onMessageCallback = callback;
-    }
-  };
-})();
+  onMessage: null
+};
