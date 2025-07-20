@@ -2,46 +2,22 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>MQTT Video Player</title>
+  <title>Video Player</title>
   <style>
     body {
       background-color: black;
-      margin: 0;
     }
-
     video {
       width: 100%;
-      margin-top: 5vh;
+      margin: 5vh auto;
       display: block;
-    }
-
-    video::-webkit-media-controls-enclosure,
-    video::-webkit-media-controls-panel,
-    video::-webkit-media-controls-overlay-play-button,
-    video::-webkit-media-controls-timeline,
-    video::-webkit-media-controls-current-time-display,
-    video::-webkit-media-controls-play-button {
-      opacity: 0 !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-    }
-
-    video::-moz-media-controls {
-      opacity: 0 !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-    }
-
-    video[controls] {
-      --media-controls-height: 0px;
     }
   </style>
 </head>
 <body>
   <video id="player" autoplay loop muted playsinline></video>
 
-  <!-- ✅ 이 순서 꼭 지키세요 -->
-  <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt-min.js"></script>
+  <script src="js/paho-mqtt-min.js"></script>
   <script src="js/TTContainer.js"></script>
   <script src="js/player.js"></script>
 </body>
