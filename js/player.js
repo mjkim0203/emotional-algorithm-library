@@ -3,14 +3,14 @@ console.log("▶▶▶ player.js 로드됨");
 document.addEventListener('DOMContentLoaded', () => {
   console.log("▶ DOMContentLoaded 발생");
 
-  const projectCode = "sample";
+  const projectCode = "sample";  // → 구독 토픽: sample/goldstar/display
 
   ttContainer.mqttConnect(
     projectCode,
-    TOPIC_TYPE.DISPLAY,
+    TOPIC_TYPE.DISPLAY, // "/goldstar/display"
     () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
     {
-      brokerUrl: "wss://test.mosquitto.org:8081/mqtt"  // Mosquitto 브로커
+      brokerUrl: "wss://test.mosquitto.org:8081/mqtt"
     }
   );
 
@@ -19,8 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const video = document.getElementById("player");
 
+    if (!message || typeof message !== 'string') {
+      console.warn("⚠️ 메시지가 비어 있거나 문자열이 아님:", message);
+      return;
+    }
+
     if (!message.endsWith(".mp4")) {
-      console.warn("⚠️ 유효하지 않은 영상 주소:", message);
+      console.warn("⚠️ .mp4 파일이 아님 - 무시됨:", message);
       return;
     }
 
