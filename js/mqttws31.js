@@ -1,1 +1,0 @@
-// 이 파일은 https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/mqttws31.min.js 에서 다운로드하여 사용하십시오.
