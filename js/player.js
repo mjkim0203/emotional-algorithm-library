@@ -1,25 +1,22 @@
-console.log("▶▶▶ player.js 로드됨");
-
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("▶ DOMContentLoaded 발생");
+  console.log("▶▶ player.js 로드됨");
 
   const projectCode = "sample";
+  const video = document.getElementById("player");
 
-  TTContainer.mqttConnect(
-    projectCode,
-    "DISPLAY",
-    () => console.log("✅ MQTT 연결 성공 (DISPLAY)")
-  );
-
-  TTContainer.onMessage = function (message) {
-    console.log("▶ 수신된 메시지:", message);
-    const video = document.getElementById("player");
-    video.src = message;
+  ttContainer.onMessage = (url) => {
+    console.log("🎬 수신한 URL:", url);
+    video.src = url;
     video.load();
-    video.play().then(() => {
-      console.log("▶ 비디오 자동 재생 성공");
-    }).catch(err => {
-      console.error("❌ 비디오 재생 오류:", err);
-    });
+    video.play();
   };
+
+  ttContainer.mqttConnect(
+    projectCode,
+    TOPIC_TYPE.DISPLAY,
+    () => console.log("✅ MQTT 연결 성공 (DISPLAY 모드)"),
+    {
+      brokerUrl: "wss://test.mosquitto.org:8081/mqtt"
+    }
+  );
 });
