@@ -9,10 +9,10 @@ const ttContainer = {
 	projectCode: null,
 	mqttInfo: {
 		clientId: "Web_Client_" + parseInt(Math.random() * 10000, 10),
-		host: "broker.hivemq.com",          // ✅ HiveMQ broker
-		port: 8884,                          // ✅ HiveMQ WSS 포트
-		useSSL: true,                        // ✅ SSL 사용
-		userName: null,                      // HiveMQ public broker는 인증 불필요
+		host: "broker.hivemq.com",
+		port: 8884,
+		useSSL: true,
+		userName: null,
 		password: null,
 		keepAliveInterval: 30,
 		isReconnect: true,
@@ -34,7 +34,7 @@ const ttContainer = {
 		this.mqttClient = new Paho.MQTT.Client(
 			this.mqttInfo.host,
 			this.mqttInfo.port,
-			"/mqtt", // ✅ HiveMQ WebSocket 경로
+			"/mqtt",
 			this.mqttInfo.clientId
 		);
 
@@ -86,6 +86,7 @@ const ttContainer = {
 			return;
 		}
 		this.mqttClient.subscribe(topic, { qos: 0 });
+		console.log("📡 구독 시작:", topic);
 	},
 
 	publish(topic, message, qos = 0) {
@@ -94,20 +95,27 @@ const ttContainer = {
 			return;
 		}
 		this.mqttClient.send(topic, message, qos);
+		console.log("📤 publish 실행:", topic, message);
 	},
 
 	sendMessage(message) {
 		const topic = (this.mqttInfo.topicType === TOPIC_TYPE.DISPLAY)
 			? this.projectCode + TOPIC_TYPE.CONTROL
 			: this.projectCode + TOPIC_TYPE.DISPLAY;
+
+		console.log("📨 sendMessage 호출됨 → publish 시작"); // ✅ 추가된 로그
+		console.log("📨 메시지 전송 대상:", topic);
+		console.log("📨 전송할 메시지:", message);
+
 		this.publish(topic, message);
 	},
 
 	recvMessage(topic, message) {
 		if (!this.mqttConnected) {
-			console.error("수신 중 연결 안됨");
+			console.error("❗ 수신 중 연결 안됨");
 			return;
 		}
+		console.log("📥 수신된 메시지:", topic, message);
 		this.onMessage(message);
 	},
 
