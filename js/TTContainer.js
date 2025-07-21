@@ -14,6 +14,11 @@ const ttContainer = {
     console.log("브로커 URL:", brokerUrl);
     console.log("구독 토픽:", this.topic);
 
+    if (typeof Paho === "undefined" || typeof Paho.MQTT === "undefined") {
+      console.error("❌ Paho.MQTT가 정의되지 않았습니다. paho-mqtt.min.js가 먼저 로드되어야 합니다.");
+      return;
+    }
+
     this.client = new Paho.MQTT.Client(brokerUrl, "client-" + Math.floor(Math.random() * 10000));
 
     this.client.onConnectionLost = function (response) {
