@@ -1,21 +1,21 @@
-window.addEventListener("DOMContentLoaded", () => {
-  const videoElement = document.getElementById("player");
+ttContainer.onMessage = function (url) {
+  const video = document.getElementById("player");
+  if (!video) {
+    console.error("❌ 비디오 요소를 찾을 수 없습니다.");
+    return;
+  }
 
-  // ✅ 메시지 수신 콜백 등록
-  ttContainer.onMessage = (url) => {
-    console.log("🎥 재생할 URL 수신됨:", url);
-    videoElement.src = url;
-    videoElement.load();
-    videoElement.play();
-  };
+  console.log("▶️ 재생할 영상 URL:", url);
+  video.src = url;
+  video.load();
+  video.play().catch(err => {
+    console.warn("⚠️ 자동 재생 실패:", err.message);
+  });
+};
 
-  // ✅ MQTT 연결 시작
-  ttContainer.mqttConnect(
-    "sample",
-    "display",
-    () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
-    {
-      brokerUrl: "wss://test.mosquitto.org:8081/mqtt"
-    }
-  );
-});
+ttContainer.mqttConnect(
+  "sample",
+  "display",
+  () => console.log("✅ MQTT 연결 성공 (PLAYER)"),
+  { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
+);
