@@ -1,58 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>MQTT Video Player</title>
   <style>
-    body {
-      margin: 0;
-      background-color: black;
-    }
-    video {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-    }
+    body { margin: 0; background: black; }
+    video { width:100vw; height:100vh; object-fit:cover; }
   </style>
 </head>
 <body>
-  <video id="player" autoplay muted playsinline></video>
+  <video id="player" autoplay loop muted playsinline></video>
 
-  <!-- MQTT 라이브러리 (CDN) -->
+  <!-- ✅ CDN 버전 사용 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
-  <script>
-    const client = new Paho.MQTT.Client("test.mosquitto.org", 8081, "/mqtt", "player-" + Math.random());
-    const topic = "sample/goldstar/display";
-
-    const player = document.getElementById("player");
-
-    client.onConnectionLost = (response) => {
-      console.warn("⚠️ 연결 끊김:", response.errorMessage);
-    };
-
-    client.onMessageArrived = (message) => {
-      const url = message.payloadString;
-      console.log("🎥 재생할 URL 수신됨:", url);
-      player.src = url;
-      player.load();
-      player.play().then(() => {
-        console.log("▶ 비디오 재생 시작");
-      }).catch(err => {
-        console.error("❌ 재생 실패:", err);
-      });
-    };
-
-    client.connect({
-      useSSL: true,
-      onSuccess: () => {
-        console.log("✅ MQTT 연결 성공 (PLAYER)");
-        client.subscribe(topic);
-        console.log("📡 토픽 구독 완료:", topic);
-      },
-      onFailure: (e) => {
-        console.error("❌ MQTT 연결 실패", e);
-      }
-    });
-  </script>
+  <script src="js/TTContainer.js"></script>
+  <script src="js/player.js"></script>
 </body>
 </html>
