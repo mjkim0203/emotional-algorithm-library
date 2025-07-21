@@ -17,7 +17,7 @@ const ttContainer = {
     console.log("📨 구독할 토픽:", this.topic);
 
     if (typeof Paho === "undefined" || typeof Paho.MQTT === "undefined") {
-      console.error("❌ Paho.MQTT가 정의되지 않았습니다. paho-mqtt.min.js가 먼저 로드되어야 합니다.");
+      console.error("❌ Paho.MQTT가 정의되지 않았습니다.");
       return;
     }
 
@@ -45,13 +45,10 @@ const ttContainer = {
     this.client.connect({
       onSuccess: () => {
         console.log("✅ MQTT 연결 성공:", this.topic);
-
-        // ✅ 구독 지연 호출 (Mosquitto 대응)
         setTimeout(() => {
           this.client.subscribe(this.topic);
           console.log("📥 토픽 구독 완료:", this.topic);
-        }, 300);  // 300ms 지연
-
+        }, 300);  // Mosquitto 대응
         if (typeof onConnect === "function") onConnect();
       },
       onFailure: err => {
@@ -69,7 +66,7 @@ const ttContainer = {
 
     const message = new Paho.MQTT.Message(payload);
     message.destinationName = this.topic;
-    message.retained = true;  // ✅ subscriber가 나중에 연결돼도 받을 수 있게 설정
+    message.retained = true;
     console.log("📤 메시지 전송됨:", payload, "→", this.topic);
     this.client.send(message);
   }
