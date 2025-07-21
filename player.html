@@ -8,12 +8,13 @@
     video { width: 100vw; height: 100vh; object-fit: cover; }
   </style>
 
-  <!-- ✅ 순서 중요: MQTT → TTContainer → player.js -->
+  <!-- ✅ 순서 중요 -->
   <script src="js/paho-mqtt.min.js"></script>
   <script src="js/TTContainer.js"></script>
   <script src="js/player.js"></script>
 </head>
 <body>
-  <video id="player" autoplay loop muted playsinline></video>
+  <!-- ✅ preload 추가 -->
+  <video id="player" preload="auto" autoplay loop muted playsinline></video>
 </body>
 </html>
