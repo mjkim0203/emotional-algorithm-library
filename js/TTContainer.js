@@ -8,7 +8,7 @@ const ttContainer = {
   topic: null,
 
   mqttConnect: function (prefix, type, onConnect, options = {}) {
-    const brokerUrl = options.brokerUrl || "wss://test.mosquitto.org:8081/mqtt";  // ✅ Mosquitto로 통일
+    const brokerUrl = options.brokerUrl || "wss://test.mosquitto.org:8081/mqtt";
     this.topic = `${prefix}/goldstar/${type}`;
 
     console.log("브로커 URL:", brokerUrl);
@@ -46,6 +46,8 @@ const ttContainer = {
 
     const message = new Paho.MQTT.Message(payload);
     message.destinationName = this.topic;
+    message.retained = true;  // ✅ 메시지를 retain하여 subscriber가 나중에 연결되어도 수신 가능
+    console.log("📤 메시지 전송됨:", payload);
     this.client.send(message);
   }
 };
