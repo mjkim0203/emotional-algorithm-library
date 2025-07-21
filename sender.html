@@ -8,7 +8,7 @@
   <input id="videoUrl" placeholder="https://mjkim0203.github.io/emotional-algorithm-library/videos/anger.mp4">
   <button onclick="publishMessage()">전송</button>
 
-  <!-- ✅ 로컬 버전 사용 -->
+  <!-- ✅ 로컬 라이브러리 사용 -->
   <script src="js/paho-mqtt.min.js"></script>
   <script src="js/TTContainer.js"></script>
 
@@ -17,7 +17,7 @@
       "sample",
       "display",
       () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
-      { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
+      { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }  // ✅ Mosquitto로 통일
     );
 
     function publishMessage() {
