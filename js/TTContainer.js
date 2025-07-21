@@ -46,4 +46,7 @@ const ttContainer = {
     message.destinationName = this.topic;
     this.client.send(message);
   }
+ // ✅ 전송 확인 로그 추가
+  console.log("📤 메시지 전송됨:", payload);
+}
 };
