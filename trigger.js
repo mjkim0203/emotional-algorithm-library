@@ -11,6 +11,7 @@ window.addEventListener('load', () => {
   const emotionEng = document.getElementById('emotionEng');
   const bgImage = document.querySelector('.background-image');
   const gradient = document.querySelector('.gradient-overlay');
+  const userNameEl = document.getElementById("username");
 
   const emotionMap = {
     '중립': 'Neutral',
@@ -30,25 +31,40 @@ window.addEventListener('load', () => {
   }, 1000);
 
   setTimeout(() => {
-    circle1.style.animationPlayState = 'paused';
-    circle2.style.animationPlayState = 'paused';
-    circle3.style.animationPlayState = 'paused';
-
+    [circle1, circle2, circle3].forEach(c => c.style.animationPlayState = 'paused');
     title.textContent = '감정 분석을 완료했어요';
     subtitle.textContent = `현재 당신의 감정은 “${emotionText}” 입니다.`;
 
     if (emotionEng) {
       emotionEng.textContent = emotionMap[emotionText] || 'Neutral';
     }
-
-    if (emotionEngWrapper) {
-      emotionEngWrapper.classList.add('show');
-    }
+    if (emotionEngWrapper) emotionEngWrapper.classList.add('show');
   }, 6000);
 
   setTimeout(() => {
     document.querySelector('.screen1').classList.remove('show');
     document.querySelector('.screen2').classList.add('show');
+    document.querySelector('.progress-wrapper').style.display = 'none';
+    bgImage.style.display = 'block';
+    gradient.style.display = 'block';
+
+    const name = localStorage.getItem("userName") || "Guest";
+    if (userNameEl) userNameEl.textContent = name;
+  }, 9000);
+});
+
+// ✅ 비활성 시간 후 홈으로 이동
+let idleTimer;
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => window.location.href = 'index.html', 60000);
+}
+window.addEventListener('load', () => {
+  resetIdleTimer();
+  ['mousemove','mousedown','keydown','touchstart','scroll'].forEach(e => {
+    document.addEventListener(e, resetIdleTimer, { passive: true });
+  });
+});
 
     // 프로그레스바 숨기기
     document.querySelector('.progress-wrapper').style.display = 'none';
