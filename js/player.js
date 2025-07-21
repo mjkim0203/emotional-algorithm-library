@@ -17,5 +17,5 @@ ttContainer.mqttConnect(
   "sample",
   "display",
   () => console.log("✅ MQTT 연결 성공 (PLAYER)"),
-  { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
+  { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" } // ✅ Mosquitto로 통일
 );
