@@ -1,4 +1,4 @@
-TTcontainer.js  const TOPIC_TYPE = {
+  const TOPIC_TYPE = {
   CONTROL: "control",
   DISPLAY: "display"
 };
