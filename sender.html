@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head><meta charset="UTF-8"><title>MQTT Sender</title></head>
+<head>
+  <meta charset="UTF-8">
+  <title>MQTT Sender</title>
+</head>
 <body>
   <input id="videoUrl" placeholder="https://... .mp4">
   <button onclick="publishMessage()">전송</button>
 
+  <!-- ✅ CDN에서 Paho MQTT 로드 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
   <script src="js/TTContainer.js"></script>
+
   <script>
+    // ✅ 토픽 통일: DISPLAY로 설정
     ttContainer.mqttConnect(
       "sample",
-      TOPIC_TYPE.CONTROL,
-      () => console.log("✅ MQTT 연결 성공 (CONTROL)")
+      "display",
+      () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
+      { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
     );
+
     function publishMessage() {
       const url = document.getElementById("videoUrl").value;
-      if (!url.endsWith(".mp4")) { alert("⚠️ .mp4 링크 입력 필요"); return; }
+      if (!url.endsWith(".mp4")) {
+        alert("⚠️ .mp4 링크 입력 필요");
+        return;
+      }
       ttContainer.sendMessage(url);
     }
   </script>
