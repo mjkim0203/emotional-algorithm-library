@@ -8,7 +8,7 @@ const ttContainer = {
   topic: null,
 
   mqttConnect: function (prefix, type, onConnect, options = {}) {
-    const brokerUrl = options.brokerUrl || "wss://test.mosquitto.org:8081/mqtt";
+    const brokerUrl = options.brokerUrl || "wss://test.mosquitto.org:8081/mqtt";  // ✅ Mosquitto로 통일
     this.topic = `${prefix}/goldstar/${type}`;
 
     console.log("브로커 URL:", brokerUrl);
