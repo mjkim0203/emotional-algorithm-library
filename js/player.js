@@ -13,9 +13,10 @@ ttContainer.onMessage = function (url) {
   });
 };
 
+// ✅ Mosquitto 브로커로 연결
 ttContainer.mqttConnect(
   "sample",
   "display",
-  () => console.log("📡 PLAYER MQTT 연결 완료"),
+  () => console.log("✅ MQTT 연결 성공 (PLAYER)"),
   { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
 );
