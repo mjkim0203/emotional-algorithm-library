@@ -9,14 +9,13 @@ const ttContainer = {
 
   mqttConnect: function (prefix, type, onConnect, options = {}) {
     console.log("📡 mqttConnect() 호출됨");
-    
+
     const brokerUrl = options.brokerUrl || "wss://test.mosquitto.org:8081/mqtt";
     this.topic = `${prefix}/goldstar/${type}`;
 
     console.log("🔗 브로커 URL:", brokerUrl);
     console.log("📨 구독할 토픽:", this.topic);
 
-    // MQTT 라이브러리 로딩 여부 확인
     if (typeof Paho === "undefined" || typeof Paho.MQTT === "undefined") {
       console.error("❌ Paho.MQTT가 정의되지 않았습니다. paho-mqtt.min.js가 먼저 로드되어야 합니다.");
       return;
@@ -30,12 +29,10 @@ const ttContainer = {
       return;
     }
 
-    // 연결 끊김 처리
     this.client.onConnectionLost = function (response) {
       console.warn("⚠️ MQTT 연결 끊김:", response.errorMessage);
     };
 
-    // 메시지 수신 처리
     this.client.onMessageArrived = function (message) {
       console.log("📩 수신 메시지:", message.payloadString);
       if (typeof ttContainer.onMessage === "function") {
@@ -45,14 +42,15 @@ const ttContainer = {
       }
     };
 
-    // 연결 시작
     this.client.connect({
       onSuccess: () => {
         console.log("✅ MQTT 연결 성공:", this.topic);
 
-        // ✅ 명시적으로 토픽 구독
-        this.client.subscribe(this.topic);
-        console.log("📥 토픽 구독 완료:", this.topic);
+        // ✅ 구독 지연 호출 (Mosquitto 대응)
+        setTimeout(() => {
+          this.client.subscribe(this.topic);
+          console.log("📥 토픽 구독 완료:", this.topic);
+        }, 300);  // 300ms 지연
 
         if (typeof onConnect === "function") onConnect();
       },
@@ -71,7 +69,7 @@ const ttContainer = {
 
     const message = new Paho.MQTT.Message(payload);
     message.destinationName = this.topic;
-    message.retained = true;  // ✅ subscriber가 나중에 붙어도 받을 수 있게 설정
+    message.retained = true;  // ✅ subscriber가 나중에 연결돼도 받을 수 있게 설정
     console.log("📤 메시지 전송됨:", payload, "→", this.topic);
     this.client.send(message);
   }
