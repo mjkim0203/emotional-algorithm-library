@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>MQTT Sender</title>
 </head>
 <body>
-  <input id="videoUrl" placeholder="https://... .mp4">
-  <button onclick="publishMessage()">전송</button>
+  <h2>영상 URL 입력 후 전송</h2>
+  <input id="videoUrl" type="text" placeholder="https://example.com/video.mp4" />
+  <button onclick="publishMessage()">MQTT 메시지 전송</button>
 
-  <!-- ✅ CDN에서 Paho MQTT 로드 -->
+  <!-- MQTT 라이브러리 (CDN) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
-  <script src="js/TTContainer.js"></script>
-
   <script>
-    // ✅ 토픽 통일: DISPLAY로 설정
-    ttContainer.mqttConnect(
-      "sample",
-      "display",
-      () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
-      { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
-    );
+    const client = new Paho.MQTT.Client("test.mosquitto.org", 8081, "/mqtt", "sender-" + Math.random());
+    const topic = "sample/goldstar/display"; // ✅ player와 동일한 토픽
+
+    client.connect({
+      useSSL: true,
+      onSuccess: () => {
+        console.log("✅ MQTT 연결 성공 (SENDER)");
+      },
+      onFailure: (e) => {
+        console.error("❌ MQTT 연결 실패", e);
+      }
+    });
 
     function publishMessage() {
-      const url = document.getElementById("videoUrl").value;
+      const url = document.getElementById("videoUrl").value.trim();
       if (!url.endsWith(".mp4")) {
-        alert("⚠️ .mp4 링크 입력 필요");
+        alert("⚠️ .mp4 링크를 입력해주세요");
         return;
       }
-      ttContainer.sendMessage(url);
+
+      const msg = new Paho.MQTT.Message(url);
+      msg.destinationName = topic;
+      client.send(msg);
+      console.log("📤 전송된 메시지:", url);
     }
   </script>
 </body>
