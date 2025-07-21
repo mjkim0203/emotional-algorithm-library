@@ -43,20 +43,23 @@ const ttContainer = {
     };
 
     this.client.connect({
-      onSuccess: () => {
-        console.log("✅ MQTT 연결 성공:", this.topic);
-        setTimeout(() => {
-          this.client.subscribe(this.topic);
-          console.log("📥 토픽 구독 완료:", this.topic);
-        }, 300);  // Mosquitto 대응
-        if (typeof onConnect === "function") onConnect();
-      },
-      onFailure: err => {
-        console.error("❌ MQTT 연결 실패:", err.errorMessage || err);
-      },
-      useSSL: true
-    });
+  onSuccess: () => {
+    console.log("✅ MQTT 연결 성공:", this.topic);
+    setTimeout(() => {
+      this.client.subscribe(this.topic);
+      console.log("📥 토픽 구독 완료:", this.topic);
+    }, 300);
+
+    if (typeof onConnect === "function") onConnect();
   },
+  onFailure: err => {
+    console.error("❌ MQTT 연결 실패:", err.errorMessage || err);
+  },
+  useSSL: true,
+  keepAliveInterval: 45,   // ⏱️ 연결 유지
+  reconnect: true,         // 🔄 자동 재접속
+  cleanSession: false      // 🧠 세션 유지
+});
 
   sendMessage: function (payload) {
     if (!this.client || !this.topic) {
