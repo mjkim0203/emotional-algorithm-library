@@ -7,16 +7,18 @@ ttContainer.onMessage = function (url) {
 
   console.log("▶️ 재생할 영상 URL:", url);
   video.src = url;
+  video.preload = "auto";  // ✅ 빠른 버퍼링 유도
   video.load();
-  video.play().catch(err => {
+  video.play().then(() => {
+    console.log("🎬 자동 재생 성공");
+  }).catch(err => {
     console.warn("⚠️ 자동 재생 실패:", err.message);
   });
 };
 
-// ✅ Mosquitto 브로커로 연결
 ttContainer.mqttConnect(
   "sample",
   "display",
-  () => console.log("✅ MQTT 연결 성공 (PLAYER)"),
+  () => console.log("📡 연결 및 구독 완료 (PLAYER)"),
   { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
 );
