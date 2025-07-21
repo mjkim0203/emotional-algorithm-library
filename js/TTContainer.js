@@ -29,12 +29,20 @@ const ttContainer = {
       return;
     }
 
+    // 👉 연결 끊김 핸들러
     this.client.onConnectionLost = function (response) {
       console.warn("⚠️ MQTT 연결 끊김:", response.errorMessage);
 
-      // 자동 재연결 활성화 옵션 사용 중이지만 예외적으로 재시도하고 싶다면 여기에 넣을 수 있음
+      // 👉 수동 재연결 시도 (2초 후)
+      setTimeout(() => {
+        console.log("🔁 MQTT 재연결 시도 중...");
+        ttContainer.mqttConnect(prefix, type, () =>
+          console.log("✅ MQTT 재연결 성공 (수동)")
+        , options);
+      }, 2000);
     };
 
+    // 👉 메시지 수신 핸들러
     this.client.onMessageArrived = function (message) {
       console.log("📩 수신 메시지:", message.payloadString);
       if (typeof ttContainer.onMessage === "function") {
@@ -44,11 +52,12 @@ const ttContainer = {
       }
     };
 
+    // 👉 연결 시도
     this.client.connect({
       onSuccess: () => {
         console.log("✅ MQTT 연결 성공:", this.topic);
 
-        // Mosquitto 브로커 대응 - 약간 지연 후 subscribe
+        // Mosquitto 대응: 구독 약간 지연
         setTimeout(() => {
           this.client.subscribe(this.topic);
           console.log("📥 토픽 구독 완료:", this.topic);
@@ -60,9 +69,8 @@ const ttContainer = {
         console.error("❌ MQTT 연결 실패:", err.errorMessage || err);
       },
       useSSL: true,
-      keepAliveInterval: 45,   // ⏱️ 브로커와의 연결을 유지하기 위한 Ping 간격 (초 단위)
-      reconnect: true,         // 🔄 연결 끊겼을 때 자동 재연결 시도
-      cleanSession: false      // 🧠 세션 상태 유지 (retain 메시지 수신 포함)
+      keepAliveInterval: 45,   // 연결 유지 Ping (초)
+      cleanSession: false      // retain 메시지 유지
     });
   },
 
@@ -74,7 +82,7 @@ const ttContainer = {
 
     const message = new Paho.MQTT.Message(payload);
     message.destinationName = this.topic;
-    message.retained = true;  // 🔁 retain 메시지로 설정하여 이후 접속한 subscriber도 수신 가능
+    message.retained = true;  // retain 메시지 설정
     console.log("📤 메시지 전송됨:", payload, "→", this.topic);
     this.client.send(message);
   }
