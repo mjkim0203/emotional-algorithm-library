@@ -10,7 +10,8 @@ const ttContainer = {
     console.log("📡 브로커 URL:", brokerUrl);
     console.log("📨 구독 토픽:", this.topic);
 
-    this.client = new Paho.MQTT.Client(brokerUrl, "client-" + Math.random());
+    // ✅ Paho.Client로 변경
+    this.client = new Paho.Client(brokerUrl, "client-" + Math.random());
 
     this.client.onConnectionLost = (response) => {
       console.warn("⚠️ 연결 끊김:", response.errorMessage);
@@ -34,7 +35,7 @@ const ttContainer = {
       console.error("❌ MQTT 연결되지 않음");
       return;
     }
-    const message = new Paho.MQTT.Message(payload);
+    const message = new Paho.Message(payload);
     message.destinationName = this.topic;
     this.client.send(message);
   }
