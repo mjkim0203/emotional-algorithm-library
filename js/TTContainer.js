@@ -1,5 +1,3 @@
-// js/TTContainer.js
-
 const TOPIC_TYPE = {
   CONTROL: "control",
   DISPLAY: "display"
@@ -16,8 +14,7 @@ const ttContainer = {
     console.log("브로커 URL:", brokerUrl);
     console.log("구독 토픽:", this.topic);
 
-    // ✅ Client 생성 시 Paho.Client 사용
-    this.client = new Paho.Client(brokerUrl, "client-" + Math.floor(Math.random() * 10000));
+    this.client = new Paho.MQTT.Client(brokerUrl, "client-" + Math.floor(Math.random() * 10000));
 
     this.client.onConnectionLost = function (response) {
       console.warn("MQTT 연결 끊김:", response.errorMessage);
@@ -42,11 +39,12 @@ const ttContainer = {
       return;
     }
 
-    const message = new Paho.Message(payload);
+    const message = new Paho.MQTT.Message(payload);
     message.destinationName = this.topic;
     this.client.send(message);
+    console.log("📤 메시지 전송됨:", payload); // ✅ 세미콜론 포함
   }
- // ✅ 전송 확인 로그 추가
-  console.log("📤 메시지 전송됨:", payload);
-}
 };
+
+// ✅ 외부에서 접근 가능하게 등록
+window.ttContainer = ttContainer;
