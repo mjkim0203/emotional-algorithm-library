@@ -5,16 +5,15 @@
   <title>MQTT Video Player</title>
   <style>
     body { margin: 0; background: black; }
-    video { width:100vw; height:100vh; object-fit:cover; }
+    video { width: 100vw; height: 100vh; object-fit: cover; }
   </style>
- <!-- ✅ CDN 버전 사용 -->
+
+  <!-- ✅ 순서: Paho MQTT → TTContainer → player.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
   <script src="js/TTContainer.js"></script>
   <script src="js/player.js"></script>
 </head>
 <body>
   <video id="player" autoplay loop muted playsinline></video>
-
-
 </body>
 </html>
