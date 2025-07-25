@@ -12,7 +12,7 @@
   <script src="js/TTContainer.js"></script>
 
   <script>
-    // ✅ 기존 MQTT 설정 그대로 유지
+    // ✅ MQTT 연결 유지 (건드리지 않음)
     ttContainer.mqttConnect(
       "sample",
       "display",
@@ -21,9 +21,8 @@
     );
 
     function publishMessage() {
-      // ✅ 입력 없이 고정된 URL 전송
       const url = "https://mjkim0203.github.io/emotional-algorithm-library/videos/surpise.mp4";
-      ttContainer.mqttSend(url);
+      ttContainer.mqttPublish(url); // ✅ 함수명 수정됨
       console.log("✅ 전송된 URL:", url);
     }
   </script>
