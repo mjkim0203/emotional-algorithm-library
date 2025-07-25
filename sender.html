@@ -5,29 +5,26 @@
   <title>MQTT Sender</title>
 </head>
 <body>
-  <input id="videoUrl" placeholder="https://example.com/video.mp4">
-  <button onclick="publishMessage()">전송</button>
+  <button onclick="publishMessage()">영상 재생 시작</button>
 
-  <!-- ✅ 순서 중요: MQTT → TTContainer -->
-  <script src="js/paho-mqtt.min.js"></script>
+  <!-- ✅ CDN에서 Paho MQTT 로드 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js"></script>
   <script src="js/TTContainer.js"></script>
 
   <script>
+    // ✅ 기존 MQTT 설정 그대로 유지
     ttContainer.mqttConnect(
       "sample",
       "display",
-      () => console.log("✅ MQTT 연결 성공 (SENDER)"),
+      () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
       { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
     );
 
     function publishMessage() {
-      const url = document.getElementById("videoUrl").value.trim();
-      if (!url.endsWith(".mp4")) {
-        alert("⚠️ .mp4 링크를 입력하세요.");
-        return;
-      }
-      console.log("📤 publishMessage() 호출됨:", url);
-      ttContainer.sendMessage(url);
+      // ✅ 입력 없이 고정된 URL 전송
+      const url = "https://mjkim0203.github.io/emotional-algorithm-library/videos/surpise.mp4";
+      ttContainer.mqttSend(url);
+      console.log("✅ 전송된 URL:", url);
     }
   </script>
 </body>
