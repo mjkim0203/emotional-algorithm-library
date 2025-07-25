@@ -78,7 +78,7 @@
 
      <div class="page-buttons">
            <button onclick="location.href='index.html'" class="home-button">← home</button>
-           <button data-video-src="videos/fear.mp4 " 
+           <button onclick="publishMessage()" 
                    data-audio-src="audio/fear.mp3"
            class="next-button">next →</button>
         </div>
@@ -99,6 +99,23 @@
 <script src="js/paho-mqtt.min.js"></script>
   <!-- 2) TTContainer 래퍼 -->
   <script src="js/TTContainer.js"></script>
+
+<script>
+    // ✅ MQTT 연결 초기화
+    ttContainer.mqttConnect(
+      "sample",
+      "display",
+      () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
+      { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
+    );
+
+    function publishMessage() {
+      const url = "https://mjkim0203.github.io/emotional-algorithm-library/videos/surprise.mp4";
+      ttContainer.sendMessage(url);  // ✅ 정확한 함수명으로 수정
+      console.log("✅ 전송된 URL:", url);
+    }
+  </script>
+
 
   <script src="trigger.js"></script>
   <script src="socket.js"></script>
