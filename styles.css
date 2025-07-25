@@ -51,7 +51,8 @@ html, body {
   font-weight: 500;
   color: white;
   background-color: #222;
-  border-radius: 2vh;
+  border-top-left-radius: 2vh;
+  border-top-right-radius: 2vh;
   margin-bottom: 0;
   transition: background-color 0.3s ease;
 }
