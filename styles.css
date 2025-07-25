@@ -67,7 +67,8 @@ canvas {
   width: 100%;
   aspect-ratio: 4 / 3;
   background-color: black;
-  border-radius: 1vh;
+  border-bottom-left-radius: 1vh;
+  border-bottom-right-radius: 1vh;
   display: block;
 }
 
