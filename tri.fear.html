@@ -78,9 +78,10 @@
 
      <div class="page-buttons">
            <button onclick="location.href='index.html'" class="home-button">← home</button>
-           <button onclick="publishMessage()" 
-                   data-audio-src="audio/fear.mp3"
-           class="next-button">next →</button>
+           <button class="next-button"
+        onclick="sendMQTTMessageAndGoNext()">
+  next →
+</button>
         </div>
    
        <audio id="triggerAudio" preload="auto"></audio>
@@ -102,18 +103,20 @@
 
 <script>
     // ✅ MQTT 연결 초기화
+    window.addEventListener('load', () => {
     ttContainer.mqttConnect(
       "sample",
       "display",
-      () => console.log("✅ MQTT 연결 성공 (DISPLAY)"),
+      () => console.log("✅ MQTT 연결 완료 (tri.fear.html)"),
       { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
     );
+  });
 
-    function publishMessage() {
-      const url = "https://mjkim0203.github.io/emotional-algorithm-library/videos/surprise.mp4";
-      ttContainer.sendMessage(url);  // ✅ 정확한 함수명으로 수정
-      console.log("✅ 전송된 URL:", url);
-    }
+  function sendMQTTMessageAndGoNext() {
+    const url = "https://mjkim0203.github.io/emotional-algorithm-library/videos/fear.mp4";
+    ttContainer.sendMessage(url);
+    console.log("✅ MQTT 메시지 전송됨:", url);
+  }
   </script>
 
 
