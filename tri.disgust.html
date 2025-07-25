@@ -77,9 +77,10 @@
 
       <div class="page-buttons">
            <button onclick="location.href='index.html'" class="home-button">← home</button>
-           <button data-video-src="videos/disgust.mp4 " 
-                   data-audio-src="audio/disgust.mp3"
-           class="next-button">next →</button>
+           <button class="next-button"
+        onclick="sendMQTTMessageAndGoNext()">
+  next →
+</button>
         </div>
    
        <audio id="triggerAudio" preload="auto"></audio>
