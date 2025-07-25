@@ -1,7 +1,3 @@
-const TOPIC_TYPE = {
-  DISPLAY: "display"
-};
-
 const projectCode = "sample";
 ttContainer.mqttConnect(
   projectCode,
