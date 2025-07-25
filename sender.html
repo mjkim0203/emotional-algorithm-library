@@ -12,7 +12,7 @@
   <script src="js/TTContainer.js"></script>
 
   <script>
-    // ✅ MQTT 연결 유지 (건드리지 않음)
+    // ✅ MQTT 연결 초기화
     ttContainer.mqttConnect(
       "sample",
       "display",
@@ -22,7 +22,7 @@
 
     function publishMessage() {
       const url = "https://mjkim0203.github.io/emotional-algorithm-library/videos/surpise.mp4";
-      ttContainer.mqttPublish(url); // ✅ 함수명 수정됨
+      ttContainer.sendMessage(url);  // ✅ 정확한 함수명으로 수정
       console.log("✅ 전송된 URL:", url);
     }
   </script>
