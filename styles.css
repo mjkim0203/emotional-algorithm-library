@@ -19,11 +19,10 @@ html, body {
   flex-direction: column;
   align-items: center;
   padding: 2vh 2vw;
-  gap: 1vh;
 }
 
 #emotion-graphic {
-  width: 7vh;
+  width: 6vh;
   height: auto;
   margin-bottom: 1vh;
   transition: opacity 0.3s ease;
@@ -32,8 +31,9 @@ html, body {
 .prompt-wrapper {
   width: 90vw;
   background-color: black;
-  padding: 0.5vh 0.5vw;
+  padding: 0.5vh 0.5vw ;
   text-align: center;
+  margin-bottom: 0;
 }
 
 .prompt-text {
@@ -62,6 +62,7 @@ html, body {
   width: 90vw;
   aspect-ratio: 4 / 3;
   position: relative;
+  margin-top: 0;
 }
 
 canvas {
@@ -112,7 +113,7 @@ canvas {
   }
 
   #emotion-graphic {
-    width: 7vw;
+    width: 6vw;
   }
 
   #capture-image {
