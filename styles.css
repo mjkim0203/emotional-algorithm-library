@@ -17,8 +17,8 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2vw;
-  gap: 2vh;
+  padding: 2vh 2vw;
+  
 }
 
 #emotion-graphic {
