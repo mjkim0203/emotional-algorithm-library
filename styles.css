@@ -32,7 +32,7 @@ html, body {
 .prompt-wrapper {
   width: 90vw;
   background-color: black;
-  padding: 2vh 2vw;
+  padding: 1vh 1vw;
   text-align: center;
 }
 
@@ -83,7 +83,7 @@ canvas {
 }
 
 #capture-image {
-  width: 8vh;
+  width: 9vh;
   height: auto;
   display: block;
   margin: 0 auto;
@@ -92,7 +92,7 @@ canvas {
 #capture-text {
   color: white;
   font-size: 2.2vh;
-  margin-top: 2vh;
+  margin-top: 3vh;
   margin-bottom: 1vh;
   text-align: center;
 }
