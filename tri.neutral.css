@@ -83,7 +83,7 @@ html, body {
   font-weight: 510;
   text-align: center;
   opacity: 0;
-  transition: opacity 0.9s ease-in-out;
+  transition: opacity 0.6s ease-in-out;
 }
 
 .screen1 .title {
@@ -97,7 +97,7 @@ html, body {
 /* === 화면1: 감정 분석 중 UI === */
 .subtitle {
   font-size: 3vw;
-  margin-top: 7vh;
+  margin-top: 2vh;
   margin-bottom: 9vh;
   text-align: center;
 }
@@ -106,6 +106,10 @@ html, body {
   position: relative;
   height: 25vh;
   margin-bottom: 6vh;
+}
+
+.circle1, .circle2, .circle3 {
+  position: absolute;
 }
 
 .circle1, .circle2, .circle3 {
@@ -154,6 +158,7 @@ html, body {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5vh); }
 }
+
 
 .emotion-eng-wrapper {
   display: flex;
@@ -232,7 +237,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://i.ibb.co/Q76TbfqX/B-100.png") no-repeat center top;
+  background: url("https://i.ibb.co/RkNz2cLY/B-200.png") no-repeat center top;
   background-size: 70%;
   z-index: 1;
   pointer-events: none;
@@ -245,7 +250,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 50vh;
-  background: linear-gradient(to bottom, rgba(122, 122, 122, 0.35), rgba(122, 122, 122, 0));
+  background: linear-gradient(to bottom, rgba(255, 224, 72, 0.35), rgba(255, 224, 72, 0));
   z-index: 2;
   pointer-events: none;
   display: none; /* 기본적으로 숨김 */
@@ -284,7 +289,7 @@ html, body {
 }
 
 .value {
-  font-size: 5vw;
+  font-size: 4.8vw;
   font-weight: 500;
   margin-top: 0.5vh;
 }
@@ -297,7 +302,7 @@ html, body {
 }
 
 .emoji-img {
-  width: 4.5vw;
+  width: 5vw;
   margin-bottom: 0.3vh;
 }
 
@@ -309,7 +314,7 @@ html, body {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: black;
+  background-color: #070707;
   z-index: 5;
   display: flex;
   justify-content: center;
