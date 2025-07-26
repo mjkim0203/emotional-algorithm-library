@@ -17,7 +17,7 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2vh 2vw;
+  padding: 2vw;
   gap: 2vh;
 }
 
