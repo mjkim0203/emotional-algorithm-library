@@ -14,17 +14,18 @@ html, body {
 .container {
   width: 100vw;
   height: 100vh;
+  top: 1vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2vh 2vw;
-  
+  gap: 2vh;
 }
 
 #emotion-graphic {
   width: 6vh;
   height: auto;
-  margin-bottom: 2vh;
+  margin-bottom: 1vh;
   transition: opacity 0.3s ease;
 }
 
@@ -53,7 +54,7 @@ html, body {
   background-color: #222;
   border-top-left-radius: 2vh;
   border-top-right-radius: 2vh;
-  margin-bottom: 0;
+  margin-bottom: 0px;
   transition: background-color 0.3s ease;
 }
 
