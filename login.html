@@ -14,6 +14,7 @@
       margin: 0; padding: 0; box-sizing: border-box;
       background: black; background-size: cover;
       height: 100%;
+      cursor: none;
     }
     h1, h2 { font-size: 2.4rem; font-weight: 600; color: white; }
     .title { text-align: center; margin-bottom: 20px; }
@@ -65,6 +66,18 @@
       border: 1.5px solid white;
       cursor: pointer;
     }
+
+ .cursor-image {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  mix-blend-mode: difference; /* or 'exclusion', 'screen', etc. */
+}
+    
   </style>
 </head>
 <body>
@@ -110,6 +123,35 @@
         window.location.href = 'faceapi.html'; // redirect to the next page
         return false; // prevent default <a> action
     }
+
+    // 커서 이미지 요소 생성
+    const cursor = document.createElement("img");
+    cursor.className = "cursor-image";
+    cursor.src = "assets/white.png"; // 기본 흰 커서
+    document.body.appendChild(cursor);
+
+    // 커서 움직임
+    document.addEventListener("mousemove", (e) => {
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
+
+      const target = document.elementFromPoint(e.clientX, e.clientY);
+      if (target) {
+        // 필요 시 target을 분석해 배경 판단 가능
+        cursor.src = "assets/white.png";
+      }
+    });
+
+    // 클릭 시 확대
+    document.addEventListener("mousedown", () => {
+      cursor.style.transform = "translate(-50%, -50%) scale(1.6)";
+    });
+
+    document.addEventListener("mouseup", () => {
+      cursor.style.transform = "translate(-50%, -50%) scale(1)";
+    });
+    
+    
   </script>
 </body>
 </html>
