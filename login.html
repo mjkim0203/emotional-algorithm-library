@@ -100,74 +100,53 @@
 
   
 <script>
-document.addEventListener("mousemove", (e) => {
-  ...
-  if (target && target.closest(".login-button")) {
-    cursor.src = hoverCursor;
-  } else {
-    cursor.src = defaultCursor;
-  }
-
-<script>
-    const defaultCursor = "assets/white.png"; // 기본 커서
   const hoverCursor = "assets/hover.png";   // 버튼 hover 시
 
-  // ✅ 커서 DOM 요소 생성
-  const cursor = document.createElement("img");
-  cursor.src = defaultCursor;
-  Object.assign(cursor.style, {
-    position: "fixed",
-    width: "60px",
-    height: "60px",
-    pointerEvents: "none",
-    zIndex: "9999",
-    transform: "translate(-50%, -50%) scale(1)",
-    transition: "transform 0.2s ease, opacity 0.2s ease",
-    mixBlendMode: "difference"
-  });
-  document.body.appendChild(cursor);
-
-  // ✅ 마우스 이동 시 커서 위치 및 이미지 변경
+  // ✅ 마우스 움직임 시 위치와 hover 감지
   document.addEventListener("mousemove", (e) => {
     cursor.style.left = `${e.clientX}px`;
     cursor.style.top = `${e.clientY}px`;
 
     const target = document.elementFromPoint(e.clientX, e.clientY);
+
     if (target && target.closest(".login-button")) {
       cursor.src = hoverCursor;
     } else {
       cursor.src = defaultCursor;
     }
-  });
+  
+$(function(){
+  const formInputs = $('input[type="text"]');
 
-  // ✅ jQuery: placeholder 라벨 처리
-  $(function(){
-    const formInputs = $('input[type="text"]');
-
-    formInputs.each(function(){
-      if ($.trim(this.value) !== "") {
-        $(this)
-          .addClass('filled')
-          .siblings('.formLabel').addClass('formTop');
-      }
-    });
-
-    formInputs.on('focus', function(){
+  // 0) 초기값 반영 (플레이백 등으로 이미 값이 있으면 스타일 유지)
+  formInputs.each(function(){
+    if ($.trim(this.value) !== "") {
       $(this)
         .addClass('filled')
         .siblings('.formLabel').addClass('formTop');
-    });
-
-    formInputs.on('input', function(){
-      $(this).toggleClass('filled', $.trim(this.value) !== "");
-    });
-
-    formInputs.on('blur', function(){
-      if ($.trim(this.value) === "") {
-        $(this).siblings('.formLabel').removeClass('formTop');
-      }
-    });
+    }
   });
+
+  // 1) focus 시: 라벨 올리고, 하얀 배경(=filled) 무조건 붙이기
+  formInputs.on('focus', function(){
+    $(this)
+      .addClass('filled')
+      .siblings('.formLabel').addClass('formTop');
+  });
+
+  // 2) input 시: 값 있으면 filled, 없으면 filled 제거
+  formInputs.on('input', function(){
+    $(this).toggleClass('filled', $.trim(this.value) !== "");
+  });
+
+  // 3) blur 시: 값이 비어 있으면 라벨만 내리고, filled는 절대 건드리지 않음
+  formInputs.on('blur', function(){
+    if ($.trim(this.value) === "") {
+      $(this).siblings('.formLabel').removeClass('formTop');
+    }
+    // (여기서는 절대 $(this).removeClass('filled') 하지 않습니다)
+  });
+});
 </script>
 
 
