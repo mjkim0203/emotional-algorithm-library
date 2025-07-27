@@ -29,7 +29,9 @@
   height: 40px;
   pointer-events: none;
   z-index: 9999;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  mix-blend-mode: difference; /* or 'exclusion', 'screen', etc. */
 }
     
     .fullscreen {
@@ -68,6 +70,16 @@ document.addEventListener("mousemove", (e) => {
 
   if (!target) return;
 
+
+// 클릭 시 확대 효과
+document.addEventListener("mousedown", () => {
+  cursor.style.transform = "translate(-50%, -50%) scale(1.6)";
+});
+
+document.addEventListener("mouseup", () => {
+  cursor.style.transform = "translate(-50%, -50%) scale(1)";
+});
+    
 // 어두운 배경 위: 흰색 커서
  else {
     cursor.src = defaultCursor;
