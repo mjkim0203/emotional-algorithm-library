@@ -20,8 +20,18 @@
       height: 100%;
       background: black;
       font-family: 'Pretendard', sans-serif;
+      cursor: none;
     }
 
+    .cursor-image {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+    
     .fullscreen {
       position: relative;
       width: 100vw;
@@ -39,5 +49,30 @@
       pointer-events: none; /* 클릭 방지 */
     }
   </style>
+  <script>
+
+// 커서 이미지 요소 생성
+const cursor = document.createElement("img");
+cursor.className = "cursor-image";
+document.body.appendChild(cursor);
+
+ // 이미지 경로
+const defaultCursor = "//white.png";  // 기본 커서 (흰색)
+
+// 커서 따라다니게
+document.addEventListener("mousemove", (e) => {
+  cursor.style.left = `${e.clientX}px`;
+  cursor.style.top = `${e.clientY}px`;
+
+  const target = document.elementFromPoint(e.clientX, e.clientY);
+
+  if (!target) return;
+
+// 어두운 배경 위: 흰색 커서
+ else {
+    cursor.src = defaultCursor;
+  }
+    
+</script>
 </body>
 </html>
