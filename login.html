@@ -108,36 +108,26 @@ document.addEventListener("mousemove", (e) => {
     cursor.src = defaultCursor;
   }
 
-// ⛔ 여기서 닫는 중괄호 `})`가 없음
-
-$(function() {
-  ...
-});
-document.addEventListener(...) 블록이 닫히지 않고,
-그 안에 $(function() { ... })가 잘못 중첩됨
-
-✅ 올바르게 수정된 코드
-html
-복사
-편집
 <script>
-  const defaultCursor = "assets/white.png"; // 기본 커서
+    const defaultCursor = "assets/white.png"; // 기본 커서
   const hoverCursor = "assets/hover.png";   // 버튼 hover 시
 
   // ✅ 커서 DOM 요소 생성
   const cursor = document.createElement("img");
   cursor.src = defaultCursor;
-  cursor.style.position = "fixed";
-  cursor.style.width = "60px";  // ✅ 1.5배 크기
-  cursor.style.height = "60px";
-  cursor.style.pointerEvents = "none";
-  cursor.style.zIndex = "9999";
-  cursor.style.transform = "translate(-50%, -50%) scale(1)";
-  cursor.style.transition = "transform 0.2s ease, opacity 0.2s ease";
-  cursor.style.mixBlendMode = "difference";
+  Object.assign(cursor.style, {
+    position: "fixed",
+    width: "60px",
+    height: "60px",
+    pointerEvents: "none",
+    zIndex: "9999",
+    transform: "translate(-50%, -50%) scale(1)",
+    transition: "transform 0.2s ease, opacity 0.2s ease",
+    mixBlendMode: "difference"
+  });
   document.body.appendChild(cursor);
 
-  // ✅ 마우스 움직임으로 커서 위치 및 이미지 변경
+  // ✅ 마우스 이동 시 커서 위치 및 이미지 변경
   document.addEventListener("mousemove", (e) => {
     cursor.style.left = `${e.clientX}px`;
     cursor.style.top = `${e.clientY}px`;
