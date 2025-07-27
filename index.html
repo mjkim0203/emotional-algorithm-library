@@ -51,40 +51,33 @@
       pointer-events: none; /* 클릭 방지 */
     }
   </style>
-  <script>
+<script>
+    // 커서 이미지 요소 생성
+    const cursor = document.createElement("img");
+    cursor.className = "cursor-image";
+    cursor.src = "assets/white.png"; // 기본 흰 커서
+    document.body.appendChild(cursor);
 
-// 커서 이미지 요소 생성
-const cursor = document.createElement("img");
-cursor.className = "cursor-image";
-document.body.appendChild(cursor);
+    // 커서 움직임
+    document.addEventListener("mousemove", (e) => {
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
 
- // 이미지 경로
-const defaultCursor = "assets/white.png";  // 기본 커서 (흰색)
+      const target = document.elementFromPoint(e.clientX, e.clientY);
+      if (target) {
+        // 필요 시 target을 분석해 배경 판단 가능
+        cursor.src = "assets/white.png";
+      }
+    });
 
-// 커서 따라다니게
-document.addEventListener("mousemove", (e) => {
-  cursor.style.left = `${e.clientX}px`;
-  cursor.style.top = `${e.clientY}px`;
+    // 클릭 시 확대
+    document.addEventListener("mousedown", () => {
+      cursor.style.transform = "translate(-50%, -50%) scale(1.6)";
+    });
 
-  const target = document.elementFromPoint(e.clientX, e.clientY);
-
-  if (!target) return;
-
-
-// 클릭 시 확대 효과
-document.addEventListener("mousedown", () => {
-  cursor.style.transform = "translate(-50%, -50%) scale(1.6)";
-});
-
-document.addEventListener("mouseup", () => {
-  cursor.style.transform = "translate(-50%, -50%) scale(1)";
-});
-    
-// 어두운 배경 위: 흰색 커서
- else {
-    cursor.src = defaultCursor;
-  }
-      });
-</script>
+    document.addEventListener("mouseup", () => {
+      cursor.style.transform = "translate(-50%, -50%) scale(1)";
+    });
+  </script>
 </body>
 </html>
