@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>로그인</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
@@ -14,7 +14,6 @@
       margin: 0; padding: 0; box-sizing: border-box;
       background: black; background-size: cover;
       height: 100%;
-      cursor: none;
     }
     h1, h2 { font-size: 1.5rem; font-weight: 600; color: white; }
     .title { text-align: center; margin-bottom: 20px; }
@@ -37,7 +36,7 @@
     
     .formLabel {
       position: absolute; top: -5px; left: 50%;
-      color: #bbb; transition: all 0.3s ease;
+      color: white; transition: all 0.3s ease;
       text-align: center; font-size: 1.2rem;
       transform: translateX(-50%);}
 
@@ -50,6 +49,14 @@
       text-align: center;
       z-index: 20;
     }
+
+    .form-style.filled {
+  background-color: #fff;
+  color: #000;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
     .form-style:focus {
       border: 2px solid white; outline: none; color: black; 
       background-color: white; transition: all 0.3s ease;
@@ -70,14 +77,13 @@
       text-align: center; line-height: 2.5rem;
       margin: 0 auto;
       text-decoration: none;
-      cursor: none !important;  /* ✅ pointer 커서 제거 */
     }
 
     .login-button:hover {
       background-color: white;
       color: black;
       border-color: white;
-      cursor: none !important;  /* ✅ pointer 커서 제거 */
+      cursor: pointer;
     }
   </style>
 </head>
@@ -98,57 +104,48 @@
     </div>
   </div>
 
-  
-<script>
-  const hoverCursor = "assets/hover.png";   // 버튼 hover 시
+  <script>
+    $(document).ready(function() {
+      const formInputs = $('input[type="text"]');
+      formInputs.focus(function() {
+        $(this).siblings('.formLabel').addClass('formTop');
+        $(this).addClass('filled');
+        });
 
-  // ✅ 마우스 움직임 시 위치와 hover 감지
-  document.addEventListener("mousemove", (e) => {
-    cursor.style.left = `${e.clientX}px`;
-    cursor.style.top = `${e.clientY}px`;
-
-    const target = document.elementFromPoint(e.clientX, e.clientY);
-
-    if (target && target.closest(".login-button")) {
-      cursor.src = hoverCursor;
-    } else {
-      cursor.src = defaultCursor;
-    }
-  
-$(function(){
-  const formInputs = $('input[type="text"]');
-
-  // 0) 초기값 반영 (플레이백 등으로 이미 값이 있으면 스타일 유지)
-  formInputs.each(function(){
-    if ($.trim(this.value) !== "") {
-      $(this)
-        .addClass('filled')
-        .siblings('.formLabel').addClass('formTop');
-    }
-  });
-
-  // 1) focus 시: 라벨 올리고, 하얀 배경(=filled) 무조건 붙이기
-  formInputs.on('focus', function(){
-    $(this)
-      .addClass('filled')
-      .siblings('.formLabel').addClass('formTop');
-  });
-
-  // 2) input 시: 값 있으면 filled, 없으면 filled 제거
-  formInputs.on('input', function(){
-    $(this).toggleClass('filled', $.trim(this.value) !== "");
-  });
-
-  // 3) blur 시: 값이 비어 있으면 라벨만 내리고, filled는 절대 건드리지 않음
-  formInputs.on('blur', function(){
-    if ($.trim(this.value) === "") {
+        // 입력 중—한 글자라도 들어오면 filled, 없으면 해제
+      formInputs.on('input', function() {
+         if ($.trim($(this).val()) !== '') {
+         $(this).addClass('filled');
+          } else {
+             $(this).removeClass('filled');
+         }
+        });
+      
+      // 블러 시—값이 비어 있으면 라벨·filled 해제, 
+      // 한 글자라도 있으면 filled 유지 (라벨은 formTop 유지)
+      formInputs.on('blur', function() {
+      if ($.trim($(this).val()) === '') {
       $(this).siblings('.formLabel').removeClass('formTop');
+      $(this).removeClass('filled');
     }
-    // (여기서는 절대 $(this).removeClass('filled') 하지 않습니다)
+    // else { /* 아무것도 안 해도 filled 클래스는 남아있습니다 */ }
   });
-});
-</script>
 
+      $('.formLabel').click(function() {
+        $(this).siblings('.form-style').focus();
+      });
+    });
 
+    function handleLogin() {
+      const name = document.getElementById('username').value.trim();
+      if (!name) {
+        alert('이름을 입력해주세요.');
+        return false; // block navigation
+      }
+      localStorage.setItem('userName', name);
+        window.location.href = 'faceapi.html'; // redirect to the next page
+        return false; // prevent default <a> action
+    }
+  </script>
 </body>
 </html>
