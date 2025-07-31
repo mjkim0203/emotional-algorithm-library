@@ -13,10 +13,11 @@ ttContainer.onMessage = function (url) {
   });
 };
 
-// ✅ Mosquitto 브로커로 연결
+// ✅ EMQX 브로커로 연결
 ttContainer.mqttConnect(
   "sample",
   "display",
   () => console.log("✅ MQTT 연결 성공 (PLAYER)"),
-  { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }
+  { brokerUrl: "wss://broker.emqx.io:8084/mqtt" }  // ✅ 수정된 부분
 );
+
