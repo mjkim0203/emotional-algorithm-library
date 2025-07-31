@@ -9,7 +9,18 @@ html, body {
   background-color: #000;
   font-family: 'Pretendard', sans-serif;
   overflow: hidden;
+  cursot: none;
 }
+
+.cursor-image {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
 
 .container {
   width: 100vw;
