@@ -134,8 +134,8 @@ canvas.height = 1;
 const ctx = canvas.getContext("2d");
 
 document.addEventListener("mousemove", (e) => {
-  cursor.style.left = ${e.clientX}px;
-  cursor.style.top = ${e.clientY}px;
+  cursor.style.left = '${e.clientX}px';
+  cursor.style.top = '${e.clientY}px';
 
   const elem = document.elementFromPoint(e.clientX, e.clientY);
 
