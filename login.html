@@ -13,8 +13,18 @@
     html, body {
       margin: 0; padding: 0; box-sizing: border-box;
       background: black; background-size: cover;
-      height: 100%;
+      height: 100%; cursor: none;
     }
+
+    .cursor-image {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+    
     h1, h2 { font-size: 1.5rem; font-weight: 600; color: white; }
     .title { text-align: center; margin-bottom: 20px; }
     #formWrapper {
@@ -146,6 +156,56 @@
         window.location.href = 'faceapi.html'; // redirect to the next page
         return false; // prevent default <a> action
     }
+
+
+    
+    const cursor = document.createElement("img");
+cursor.className = "cursor-image";
+document.body.appendChild(cursor);
+
+// 이미지 경로
+const defaultCursor = "/mnt/data/default.png";
+const whiteCursor = "/mnt/data/white.png";
+const hoverCursor = "/mnt/data/hover.png";
+
+// 임시 캔버스 생성 (픽셀 색상 확인용)
+const canvas = document.createElement("canvas");
+canvas.width = 1;
+canvas.height = 1;
+const ctx = canvas.getContext("2d");
+
+document.addEventListener("mousemove", (e) => {
+  cursor.style.left = `${e.clientX}px`;
+  cursor.style.top = `${e.clientY}px`;
+
+  const elem = document.elementFromPoint(e.clientX, e.clientY);
+
+  if (!elem) return;
+
+  // 1️⃣ hover 대상이 우선
+  if (elem.closest(".cursor-hover-target")) {
+    cursor.src = hoverCursor;
+    return;
+  }
+
+  // 2️⃣ 배경색 계산
+  const computedStyle = getComputedStyle(elem);
+  const bgColor = computedStyle.backgroundColor;
+
+  const rgb = bgColor.match(/\d+/g)?.map(Number);
+  if (!rgb || rgb.length < 3) {
+    cursor.src = defaultCursor; // fallback
+    return;
+  }
+
+  const [r, g, b] = rgb;
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  // 기준치: 128보다 작으면 어두운 배경
+  cursor.src = brightness < 128 ? whiteCursor : defaultCursor;
+});
+
+    
   </script>
 </body>
 </html>
