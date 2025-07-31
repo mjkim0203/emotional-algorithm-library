@@ -9,27 +9,6 @@
 </head>
 
 
-<script>
-  function sendNextMessage() {
-    const videoUrl = "https://mjkim0203.github.io/emotional-algorithm-library/videos/neutral.mp4";
-    const client = new Paho.MQTT.Client("wss://test.mosquitto.org:8081/mqtt", "sender-" + Math.random());
-    const topic = "sample/goldstar/display";
-
-    client.connect({
-      onSuccess: () => {
-        const message = new Paho.MQTT.Message(videoUrl);
-        message.destinationName = topic;
-        client.send(message);
-        console.log("📤 메시지 전송됨:", videoUrl);
-      },
-      useSSL: true,
-      onFailure: e => console.error("❌ MQTT 연결 실패:", e)
-    });
-  }
-</script>
-
-
-
 <body>
 
   <!-- 상단 롤링바 -->
