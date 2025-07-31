@@ -6,6 +6,18 @@
   <title>감정 분석 결과</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
   <link rel="stylesheet" href="tri.fear.css" />
+<style>
+    .cursor-image {
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+    }
+  </style>
+  
 </head>
 <body>
 
@@ -80,7 +92,7 @@
            <button onclick="location.href='index.html'" class="home-button">← home</button>
            <button data-video-src="videos/fear.mp4 " 
                    data-audio-src="audio/fear.mp3"
-class="next-button"
+class="next-button cursor-hover-targetn"
         onclick="sendMQTTMessageAndGoNext()">
   next →
 </button>
@@ -103,7 +115,42 @@ class="next-button"
   <!-- 2) TTContainer 래퍼 -->
   <script src="js/TTContainer.js"></script>
 
+  <!-- 커서 + MQTT -->  
 <script>
+const defaultCursor = "assets/default.png";
+    const whiteCursor   = "assets/white.png";
+    const hoverCursor   = "assets/hover.png";
+
+    const cursor = document.createElement("img");
+    cursor.className = "cursor-image";
+    cursor.src = defaultCursor;
+    document.body.appendChild(cursor);
+
+    // 마우스 커서 처리
+    document.addEventListener("mousemove", (e) => {
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
+
+      const elem = document.elementFromPoint(e.clientX, e.clientY);
+      if (!elem) return;
+
+      if (elem.closest(".cursor-hover-target")) {
+        cursor.src = hoverCursor;
+        return;
+      }
+
+      const bgColor = getComputedStyle(elem).backgroundColor;
+      const rgb = bgColor.match(/\d+/g)?.map(Number);
+      if (!rgb || rgb.length < 3) {
+        cursor.src = defaultCursor;
+        return;
+      }
+
+      const [r, g, b] = rgb;
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      cursor.src = brightness < 128 ? whiteCursor : defaultCursor;
+    });
+  
     // ✅ MQTT 연결 초기화
     window.addEventListener('load', () => {
     ttContainer.mqttConnect(
@@ -120,53 +167,7 @@ class="next-button"
     console.log("✅ MQTT 메시지 전송됨:", url);
   }
 
-  const cursor = document.createElement("img");
-cursor.className = "cursor-image";
-document.body.appendChild(cursor);
-
-// 이미지 경로
-const defaultCursor = "assets/default.png";
-const whiteCursor = "assets/white.png";
-const hoverCursor = "assets/hover.png";
-
-// 임시 캔버스 생성 (픽셀 색상 확인용)
-const canvas = document.createElement("canvas");
-canvas.width = 1;
-canvas.height = 1;
-const ctx = canvas.getContext("2d");
-
-document.addEventListener("mousemove", (e) => {
-  cursor.style.left = `${e.clientX}px`;
-  cursor.style.top = `${e.clientY}px`;
-
-  const elem = document.elementFromPoint(e.clientX, e.clientY);
-
-  if (!elem) return;
-
-  // 1️⃣ hover 대상이 우선
-  if (elem.closest(".cursor-hover-target")) {
-    cursor.src = hoverCursor;
-    return;
-  }
-
-  // 2️⃣ 배경색 계산
-  const computedStyle = getComputedStyle(elem);
-  const bgColor = computedStyle.backgroundColor;
-
-  const rgb = bgColor.match(/\d+/g)?.map(Number);
-  if (!rgb || rgb.length < 3) {
-    cursor.src = defaultCursor; // fallback
-    return;
-  }
-
-  const [r, g, b] = rgb;
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-  // 기준치: 128보다 작으면 어두운 배경
-  cursor.src = brightness < 128 ? whiteCursor : defaultCursor;
-});
-
-  
+ 
   </script>
 
 
