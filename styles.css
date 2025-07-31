@@ -9,7 +9,7 @@ html, body {
   background-color: #000;
   font-family: 'Pretendard', sans-serif;
   overflow: hidden;
-  cursot: none;
+  cursor: none;
 }
 
 .cursor-image {
