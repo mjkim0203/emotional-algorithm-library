@@ -10,7 +10,7 @@ const ttContainer = {
   mqttConnect: function (prefix, type, onConnect, options = {}) {
     console.log("📡 mqttConnect() 호출됨");
 
-    const brokerUrl = options.brokerUrl || "wss://broker.emqx.io:8084/mqtt";
+    const brokerUrl = options.brokerUrl || "wss://broker.hivemq.com:8884/mqtt";
 this.topic = `${prefix}/goldstar/${type}`;
 
     this.topic = `${prefix}/goldstar/${type}`;
