@@ -19,7 +19,7 @@ const ttContainer = {
 
     keepAliveInterval: 30,
     isReconnect: true,
-    reconnectTriesPerBroker: 3,   // 브로커당 재시도 한도
+    reconnectTriesPerBroker: 4,   // 브로커당 재시도 한도
     topicType: null,
   },
 
