@@ -12,9 +12,9 @@ const ttContainer = {
 
     // ✅ 브로커 자동 페일오버: EMQX → HiveMQ → Mosquitto
     brokers: [
-      { type: "url", url: "wss://broker.emqx.io:8084/mqtt" },
       { type: "url", url: "wss://broker.hivemq.com:8884/mqtt" },
-      { type: "url", url: "wss://test.mosquitto.org:8081/mqtt" }
+      { type: "url", url: "wss://test.mosquitto.org:8081/mqtt" },
+      { type: "url", url: "wss://broker.emqx.io:8084/mqtt" }
     ],
 
     keepAliveInterval: 30,
