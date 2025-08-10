@@ -7,9 +7,9 @@ ttContainer.mqttConnect(
   {
     // ✅ 자동 페일오버 순서
     brokers: [
-      { type: "url", url: "wss://broker.emqx.io:8084/mqtt" },
       { type: "url", url: "wss://broker.hivemq.com:8884/mqtt" },
-      { type: "url", url: "wss://test.mosquitto.org:8081/mqtt" }
+      { type: "url", url: "wss://test.mosquitto.org:8081/mqtt" },
+      { type: "url", url: "wss://broker.emqx.io:8084/mqtt" }
     ]
   }
 );
