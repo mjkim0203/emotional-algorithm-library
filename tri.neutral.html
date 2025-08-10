@@ -149,13 +149,22 @@
   
   
   
-  // ✅ MQTT 연결 초기화
-    window.addEventListener('load', () => {
+  // ✅ MQTT 연결 및 메시지 전송
+  window.addEventListener('load', () => {
     ttContainer.mqttConnect(
       "sample",
-      "display",
-      () => console.log("✅ MQTT 연결 완료 (tri.fear.html)"),
-      { brokerUrl: "wss://broker.hivemq.com:8884/mqtt" }
+      "display", // 현재 코드 유지 (TTContainer가 문자열을 허용하는 경우)
+      () => {
+        console.log("✅ MQTT 연결 완료 (tri.joy.html)");
+      },
+      {
+        // ✅ 자동 페일오버: EMQX → HiveMQ → Mosquitto
+        brokers: [
+          { type: "url", url: "wss://broker.emqx.io:8084/mqtt" },
+          { type: "url", url: "wss://broker.hivemq.com:8884/mqtt" },
+          { type: "url", url: "wss://test.mosquitto.org:8081/mqtt" }
+        ]
+      }
     );
   });
 
