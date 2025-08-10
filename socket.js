@@ -4,7 +4,7 @@ ttContainer.mqttConnect(
   TOPIC_TYPE.DISPLAY,
   () => console.log("🟢 MQTT 연결 성공 (DISPLAY)"),
   {
-    brokerUrl: "wss://broker.emqx.io:8084/mqtt"  // ✅ EMQX로 수정
+    brokerUrl: "wss://test.mosquitto.org:8081/mqtt"  // ✅ EMQX로 수정
   }
 );
 
