@@ -20,9 +20,9 @@ ttContainer.mqttConnect(
   () => console.log("✅ MQTT 연결 성공 (PLAYER)"),
   {
     brokers: [
-      { type: "url", url: "wss://broker.emqx.io:8084/mqtt" },
       { type: "url", url: "wss://broker.hivemq.com:8884/mqtt" },
-      { type: "url", url: "wss://test.mosquitto.org:8081/mqtt" }
+      { type: "url", url: "wss://test.mosquitto.org:8081/mqtt" },
+      { type: "url", url: "wss://broker.emqx.io:8084/mqtt" }
     ]
   }
 );
