@@ -13,11 +13,16 @@ ttContainer.onMessage = function (url) {
   });
 };
 
-// ✅ EMQX 브로커로 연결
+// ✅ 브로커 자동 페일오버: EMQX → HiveMQ → Mosquitto
 ttContainer.mqttConnect(
   "sample",
-  "display",
+  TOPIC_TYPE.DISPLAY, // ← 최신 TTContainer.js 기준
   () => console.log("✅ MQTT 연결 성공 (PLAYER)"),
-  { brokerUrl: "wss://test.mosquitto.org:8081/mqtt" }  // ✅ 수정된 부분
+  {
+    brokers: [
+      { type: "url", url: "wss://broker.emqx.io:8084/mqtt" },
+      { type: "url", url: "wss://broker.hivemq.com:8884/mqtt" },
+      { type: "url", url: "wss://test.mosquitto.org:8081/mqtt" }
+    ]
+  }
 );
-
