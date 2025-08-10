@@ -18,6 +18,6 @@ ttContainer.mqttConnect(
   "sample",
   "display",
   () => console.log("✅ MQTT 연결 성공 (PLAYER)"),
-  { brokerUrl: "wss://broker.hivemq.com:8884/mqtt" }  // ✅ 수정된 부분
+  { brokerUrl: "wss://broker.emqx.io:8084/mqtt" }  // ✅ 수정된 부분
 );
 
